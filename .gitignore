@@ -1,0 +1,61 @@
+# ==============================================================================
+# .gitignore - SMART AGV TWIN (WebGL / Three.js Simulation Project)
+# STRICT EXCLUSION OF ALL BLENDER ASSETS, FILES & RENDERS
+# ==============================================================================
+
+# --- Blender Files & Backups (STRICTLY EXCLUDED) ---
+*.blend
+*.blend1
+*.blend2
+*.blend@
+*.blend*
+.blend/
+blender_assets.cats.txt
+
+# --- Blender Renders & Media (STRICTLY EXCLUDED) ---
+*.mp4
+*.avi
+*.mov
+*.mkv
+screenshots/*.mp4
+screenshots/*blender*
+screenshots/07_final*
+screenshots/08_enhanced*
+screenshots/crop*
+screenshots/video_frame*
+
+# --- Python Cache & Temporary Scripts ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+.Python
+env/
+venv/
+.venv/
+.pytest_cache/
+
+# --- Operating System & Editor Artifacts ---
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# --- IDEs & Editors ---
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# --- Logs & Crash Dumps ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

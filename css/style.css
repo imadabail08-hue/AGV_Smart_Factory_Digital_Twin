@@ -1,0 +1,410 @@
+/* ==========================================================================
+   AGV SMART FACTORY · DIGITAL TWIN 3D (LAB 01 & LAB 02)
+   Interface Industrielle & Supervision Glassmorphism
+   ========================================================================== */
+
+:root {
+    --bg-dark: #070a13;
+    --panel-bg: rgba(15, 23, 42, 0.82);
+    --panel-border: rgba(51, 65, 85, 0.6);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --accent-blue: #38bdf8;
+    --accent-cyan: #06b6d4;
+    --accent-green: #10b981;
+    --accent-amber: #f59e0b;
+    --accent-purple: #8b5cf6;
+    --accent-red: #ef4444;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    user-select: none;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+}
+
+/* Conteneur plein écran Three.js WebGL */
+#scene-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* ==========================================================================
+   En-tête de supervision (Top Navigation Bar)
+   ========================================================================== */
+.top-nav {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    right: 20px;
+    height: 58px;
+    z-index: 10;
+    background: var(--panel-bg);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+.brand-section {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #0284c7, #06b6d4);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+}
+
+.brand-text h1 {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+}
+
+.brand-text p {
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #34d399;
+}
+
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #10b981;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #10b981;
+    animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.95); opacity: 0.7; }
+    50% { transform: scale(1.3); opacity: 1; }
+    100% { transform: scale(0.95); opacity: 0.7; }
+}
+
+.user-tag {
+    font-size: 12px;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--panel-border);
+    padding: 6px 12px;
+    border-radius: 8px;
+}
+
+.user-tag strong {
+    color: var(--accent-blue);
+}
+
+/* ==========================================================================
+   Panneau latéral gauche : Vues et Zones industrielles
+   ========================================================================== */
+.side-panel {
+    position: absolute;
+    top: 90px;
+    left: 20px;
+    width: 310px;
+    max-height: calc(100vh - 160px);
+    overflow-y: auto;
+    z-index: 10;
+    background: var(--panel-bg);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+.side-panel::-webkit-scrollbar {
+    width: 5px;
+}
+.side-panel::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.panel-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-group {
+    display: flex;
+    gap: 8px;
+}
+
+.view-btn {
+    flex: 1;
+    padding: 8px 10px;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.view-btn:hover {
+    background: rgba(51, 65, 85, 0.9);
+    color: #ffffff;
+    border-color: var(--accent-blue);
+}
+
+.view-btn.active {
+    background: linear-gradient(135deg, rgba(2, 132, 199, 0.4), rgba(6, 182, 212, 0.4));
+    border-color: var(--accent-cyan);
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(6, 182, 212, 0.3);
+}
+
+/* LAB 02 : Box Contrôles AGV */
+.agv-control-box {
+    background: rgba(30, 41, 59, 0.45);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.color-btn {
+    flex: 1;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #ffffff;
+    transition: all 0.2s ease;
+}
+
+.color-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.color-btn.active {
+    box-shadow: 0 0 0 2px #38bdf8, 0 0 12px rgba(56, 189, 248, 0.5);
+}
+
+.action-btn {
+    flex: 1;
+    padding: 8px 10px;
+    background: rgba(51, 65, 85, 0.7);
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    background: rgba(71, 85, 105, 0.9);
+    border-color: var(--accent-blue);
+    transform: translateY(-1px);
+}
+
+.action-btn.highlight {
+    width: 100%;
+    background: linear-gradient(135deg, #0284c7, #06b6d4);
+    border: none;
+    color: #ffffff;
+    font-size: 12px;
+    padding: 9px;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+}
+
+.action-btn.danger {
+    background: rgba(239, 68, 68, 0.25);
+    border-color: rgba(239, 68, 68, 0.5);
+    color: #f87171;
+}
+
+.action-btn.danger:hover {
+    background: rgba(239, 68, 68, 0.45);
+}
+
+.action-btn.success {
+    background: rgba(16, 185, 129, 0.25);
+    border-color: rgba(16, 185, 129, 0.5);
+    color: #34d399;
+}
+
+.agv-status-pill {
+    margin-top: 10px;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.agv-status-pill span {
+    color: var(--accent-cyan);
+    font-weight: 600;
+}
+
+/* Liste des 5 Zones officielles */
+.zones-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.zone-btn {
+    width: 100%;
+    padding: 8px 12px;
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+}
+
+.zone-btn:hover {
+    background: rgba(51, 65, 85, 0.8);
+    transform: translateX(3px);
+}
+
+.zone-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.zone-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+}
+
+.zone-btn[data-zone="A"] .zone-dot { background-color: var(--accent-blue); box-shadow: 0 0 8px var(--accent-blue); }
+.zone-btn[data-zone="B"] .zone-dot { background-color: var(--accent-green); box-shadow: 0 0 8px var(--accent-green); }
+.zone-btn[data-zone="C"] .zone-dot { background-color: var(--accent-amber); box-shadow: 0 0 8px var(--accent-amber); }
+.zone-btn[data-zone="D"] .zone-dot { background-color: var(--accent-cyan); box-shadow: 0 0 8px var(--accent-cyan); }
+.zone-btn[data-zone="E"] .zone-dot { background-color: var(--accent-purple); box-shadow: 0 0 8px var(--accent-purple); }
+
+.zone-role {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+/* ==========================================================================
+   Barre inférieure d'aide & télémétrie rapide
+   ========================================================================== */
+.bottom-bar {
+    position: absolute;
+    bottom: 16px;
+    left: 20px;
+    right: 20px;
+    height: 44px;
+    z-index: 10;
+    background: var(--panel-bg);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.controls-hint {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.hint-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.hint-badge {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-family: monospace;
+    font-size: 11px;
+    color: #ffffff;
+}
+
+.telemetry-quick {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+}
+
+.telemetry-item strong {
+    color: var(--accent-cyan);
+}

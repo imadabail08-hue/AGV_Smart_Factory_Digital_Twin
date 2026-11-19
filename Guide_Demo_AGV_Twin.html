@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide Officiel de Démonstration & Soutenance — SMART AGV TWIN</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+@page { size: A4 landscape; margin: 0; }
+*, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: #CBD8E0;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color: #162F3E;
+}
+.sheet {
+  width: 297mm;
+  height: 210mm;
+  padding: 9mm 13mm 7mm 13mm;
+  margin: 0 auto 10mm auto;
+  background: #FFFFFF;
+  page-break-after: always;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 20px rgba(0,0,0,.12);
+  position: relative;
+}
+@media print {
+  body { background: transparent; }
+  .sheet { margin:0; box-shadow:none; width:100%; height:100%; page-break-after:always; }
+  .no-print { display:none !important; }
+}
+
+:root {
+  --ink:      #162F3E;
+  --steel:    #557E97;
+  --mist:     #F8FAFC;
+  --mist2:    #EEF4F7;
+  --border:   #E2E8F0;
+  --border2:  #CBD5DC;
+  --green:    #2E7D32;
+  --green-bg: #E8F5E9;
+  --orange:   #E65100;
+  --orange-bg:#FFF3E0;
+  --red:      #C62828;
+  --red-bg:   #FFEBEE;
+  --blue:     #1565C0;
+  --blue-bg:  #E3F2FD;
+  --yellow:   #F57F17;
+  --yellow-bg:#FFFDE7;
+}
+
+.accent-bar {
+  height: 3.5mm;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #162F3E 0%, #557E97 55%, #2E7D32 80%, #E65100 100%);
+  flex-shrink: 0;
+  margin-bottom: 3.5mm;
+}
+
+.hdr {
+  background: var(--ink);
+  border-radius: 4px;
+  padding: 2mm 4mm;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  margin-bottom: 3mm;
+}
+.hdr-title { font-size: 7.5pt; font-weight: 700; color: #FFF; }
+.hdr-meta  { font-size: 6pt; color: #90A4AE; }
+
+.badge {
+  display: inline-block;
+  padding: .7mm 2mm;
+  border-radius: 8px;
+  font-size: 6.3pt;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.b-green  { background: var(--green-bg);  color: var(--green); }
+.b-orange { background: var(--orange-bg); color: var(--orange); }
+.b-blue   { background: var(--blue-bg);   color: var(--blue); }
+.b-red    { background: var(--red-bg);    color: var(--red); }
+.b-ink    { background: var(--ink);       color: #FFF; }
+
+.card {
+  background: var(--mist);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2.2mm 2.8mm;
+}
+
+.t-block { font-size: 7.5pt; font-weight: 700; color: var(--ink); text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 1.5px solid var(--steel); padding-bottom: 1mm; margin-bottom: 1.8mm; }
+.t-body  { font-size: 7.6pt; color: var(--ink); line-height: 1.4; }
+.t-small { font-size: 6.9pt; color: var(--steel); line-height: 1.35; }
+.t-code  { font-family: 'JetBrains Mono', monospace; font-size: 6.8pt; background: var(--mist2); padding: 0.3mm 1.5mm; border-radius: 3px; color: var(--ink); font-weight: 600; }
+
+.script-box {
+  background: #FFFFFF;
+  border-left: 3px solid var(--steel);
+  border-radius: 0 4px 4px 0;
+  padding: 2mm 3mm;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  margin-bottom: 1.8mm;
+}
+.script-box.cue-green { border-left-color: var(--green); }
+.script-box.cue-orange { border-left-color: var(--orange); }
+.script-box.cue-red { border-left-color: var(--red); }
+
+.cue-tag {
+  font-size: 6.3pt;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5mm;
+  margin-bottom: 0.8mm;
+}
+.cue-action { color: var(--blue); }
+.speech-text {
+  font-size: 7.4pt;
+  color: var(--ink);
+  font-style: italic;
+  line-height: 1.42;
+}
+
+.faq-card {
+  background: var(--mist);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2mm 2.5mm;
+  margin-bottom: 1.6mm;
+}
+.faq-q { font-size: 7.3pt; font-weight: 800; color: var(--ink); margin-bottom: 0.6mm; }
+.faq-a { font-size: 7pt; color: #2D3748; line-height: 1.38; }
+
+table { width: 100%; border-collapse: collapse; }
+th { background: var(--ink); color: #FFF; padding: 1.8mm 2.5mm; font-size: 6.8pt; font-weight: 600; text-align: left; }
+td { padding: 1.5mm 2.5mm; border-bottom: 1px solid var(--border); font-size: 7.2pt; color: var(--ink); vertical-align: top; }
+tr:nth-child(even) td { background: var(--mist); }
+
+.cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5mm; }
+.cols-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3mm; }
+
+.footer {
+  position: absolute;
+  bottom: 4mm;
+  left: 13mm;
+  right: 13mm;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+.foot-mark { font-size: 6pt; color: var(--border2); }
+.foot-num  { font-size: 7pt; font-weight: 700; color: var(--steel); }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     PAGE 01 — DÉROULÉ MINUTÉ & SCÉNARIOS DE DÉMO
+══════════════════════════════════════════════════════════ -->
+<section class="sheet">
+  <div class="accent-bar"></div>
+  <div class="hdr">
+    <div><div class="hdr-title">LIVRABLE 03 — GUIDE OFFICIEL DE DÉMONSTRATION &amp; SOUTENANCE ORALE</div><div class="hdr-meta">SMART AGV TWIN · Capstone Ingénierie · Imad Abail</div></div>
+    <div style="display:flex;gap:1.5mm;"><span class="badge b-green">Démo Jurys : 7 à 10 min</span><span class="badge b-blue">Scénarios Validés</span></div>
+  </div>
+
+  <div class="cols-2" style="flex:1;min-height:0;">
+    <!-- LEFT: Timing & Structure -->
+    <div style="display:flex;flex-direction:column;gap:2.5mm;">
+      <div>
+        <div class="t-block">Déroulé Minuté de la Présentation (7 à 10 Minutes)</div>
+        <table>
+          <thead><tr><th style="width:14mm;">Temps</th><th style="width:24mm;">Phase</th><th>Actions Démo dans le Simulateur</th><th style="width:16mm;">Statut</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>00:00–01:30</strong></td>
+              <td><strong>Introduction</strong></td>
+              <td>Vue 3D Iso · Présentation de l'Usine (5 zones, 6 racks), problématique intra-logistique et concept du Digital Twin.</td>
+              <td><span class="badge b-ink">Cadrage</span></td>
+            </tr>
+            <tr>
+              <td><strong>01:30–04:00</strong></td>
+              <td><strong>Scénario 01 (Nominal)</strong></td>
+              <td>Clic sur <span class="t-code">Lancer Cycle A→B→C→D</span> · Suivi en direct du calcul A* (0.10ms), chargement A, dépôt B, expédition C.</td>
+              <td><span class="badge b-green">Démonstration</span></td>
+            </tr>
+            <tr>
+              <td><strong>04:00–06:30</strong></td>
+              <td><strong>Scénario 02 (Aléa)</strong></td>
+              <td>Pendant la navigation, clic sur <span class="t-code">Bloquer le Couloir</span> · Arrêt LiDAR immédiat (ISO 3691-4) · Contournement A* en direct (0.20ms).</td>
+              <td><span class="badge b-orange">Effet Whaou</span></td>
+            </tr>
+            <tr>
+              <td><strong>06:30–08:00</strong></td>
+              <td><strong>Scénario 03 (Énergie)</strong></td>
+              <td>Retour automatique Zone D (Recharge par induction) · Explication du modèle de batterie et FSM de mission.</td>
+              <td><span class="badge b-blue">Supervision</span></td>
+            </tr>
+            <tr>
+              <td><strong>08:00–10:00</strong></td>
+              <td><strong>Bilan &amp; Q/R</strong></td>
+              <td>Zoom sur le tableau de bord de télémétrie (52.9m, 86.8%, 60 FPS) · Réponses aux questions du jury (FAQ).</td>
+              <td><span class="badge b-green">Conclusion</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <div class="t-block">Tableau Récapitulatif des Scénarios de Test</div>
+        <div class="card" style="margin-bottom:1.5mm;">
+          <div style="font-size:7.2pt;font-weight:700;color:var(--green);">Scénario 1 : Multi-Missions Séquentielles (A→B→C→D)</div>
+          <div class="t-small">Objectif : Démontrer l'autonomie totale de la machine à états (FSM). L'AGV va chercher le colis brut en Zone A, l'amène en Production (B), livre le produit fini en Expédition (C) et retourne à la base (D). Odomètre mesuré : <strong>52.9m</strong> en <strong>00:25</strong>.</div>
+        </div>
+        <div class="card" style="margin-bottom:1.5mm;">
+          <div style="font-size:7.2pt;font-weight:700;color:var(--orange);">Scénario 2 : Obturation Dynamique &amp; Replanning A*</div>
+          <div class="t-small">Objectif : Démontrer la réactivité temps réel. L'obstacle est injecté dans le couloir actif. Le scanner LiDAR frontal stoppe le robot instantanément sans collision. L'algorithme A* calcule un contournement en <strong>0.20ms</strong> (détour 11 cases) et reprend sans intervention.</div>
+        </div>
+        <div class="card">
+          <div style="font-size:7.2pt;font-weight:700;color:var(--blue);">Scénario 3 : Gestion Énergétique &amp; Retour Base</div>
+          <div class="t-small">Objectif : Démontrer la viabilité industrielle. Sous seuil critique ou en fin de tâche, l'AGV reroute vers la station de charge par induction en Zone D (3, 3) pour préserver son autonomie.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Checklists & Manipulations -->
+    <div style="display:flex;flex-direction:column;gap:2.5mm;">
+      <div>
+        <div class="t-block">Checklist Pré-Démonstration (À faire 5 min avant)</div>
+        <div class="card">
+          <div class="t-body" style="line-height:1.6;">
+            ☑ <strong>Navigateur :</strong> Ouvrir <span class="t-code">index.html</span> dans Google Chrome (plein écran via F11).<br>
+            ☑ <strong>Vérification Moteur :</strong> Constater le bandeau vert <em>"JUMEAU NUMÉRIQUE ACTIF"</em> et les <strong>60 FPS</strong> en bas à droite.<br>
+            ☑ <strong>Position de départ :</strong> Vérifier que l'AGV est positionné en Zone D (3, 3) et que le statut FSM indique <em>"FSM PRÊTE"</em>.<br>
+            ☑ <strong>Onglets de support :</strong> Avoir ouvert le <strong>Poster Scientifique A4</strong> et la <strong>Documentation Technique (10 pages)</strong> dans des onglets adjacents pour référence immédiate en cas de question approfondie.<br>
+            ☑ <strong>Raccourcis Souris :</strong> Clic gauche (rotation orbitale), Molette (zoom), Clic droit (pan).
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="t-block">Guide Visuel des Éléments Clés à Pointer du Doigt</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:2mm;">
+          <div class="card">
+            <div style="font-weight:700;font-size:7.2pt;color:var(--ink);">1. Grille d'Occupation (B03)</div>
+            <div class="t-small mt-1">Cliquer sur <em>"Calque Grille (ON)"</em> pour matérialiser la matrice 24×16 (384 cellules de 1.5m). Montrer la discrétisation spatiale de l'usine.</div>
+          </div>
+          <div class="card">
+            <div style="font-weight:700;font-size:7.2pt;color:var(--ink);">2. Gyrophare &amp; LiDAR (B02/B07)</div>
+            <div class="t-small mt-1">Montrer le gyrophare bleu en nominal, qui bascule immédiatement au <strong>rouge d'alerte</strong> (#C62828) lors du déclenchement LiDAR ISO 3691-4.</div>
+          </div>
+          <div class="card">
+            <div style="font-weight:700;font-size:7.2pt;color:var(--ink);">3. Statut Déviation (B08)</div>
+            <div class="t-small mt-1">Pointer la carte verte : <em>"Contournement Actif : 11 cases (16.5m) en 0.20ms"</em> pour prouver la vitesse de calcul d'A* en temps réel.</div>
+          </div>
+          <div class="card">
+            <div style="font-weight:700;font-size:7.2pt;color:var(--ink);">4. Journal d'Audit Direct (B10)</div>
+            <div class="t-small mt-1">Faire défiler les logs horodatés : <em>[00:14.1] ARRÊT ISO 3691-4</em> et <em>[00:25.0] CYCLE COMPLET</em>.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="background:#E8F5E9;border-color:var(--green);margin-top:auto;">
+        <div style="font-size:7.2pt;font-weight:800;color:var(--green);">Phrase Clé d'Ouverture :</div>
+        <div class="t-body" style="font-style:italic;margin-top:0.5mm;">
+          "Monsieur le Président, membres du jury, je vous présente aujourd'hui SMART AGV TWIN, un jumeau numérique 3D complet d'un véhicule industriel autonome, combinant l'algorithme de routage optimal A*, une replanification d'urgence en 0.20ms et une conformité rigoureuse avec la norme de sécurité ISO 3691-4."
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="foot-mark">SMART AGV TWIN — Livrable 03 : Guide Démo &amp; Soutenance — Imad Abail — Novembre 2026</div>
+    <div class="foot-num">01 / 02</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     PAGE 02 — SCRIPT ORAL DÉTAILLÉ & FAQ TECHNIQUE JURY
+══════════════════════════════════════════════════════════ -->
+<section class="sheet">
+  <div class="accent-bar"></div>
+  <div class="hdr">
+    <div><div class="hdr-title">SCRIPT ORAL PAS-À-PAS &amp; FAQ TECHNIQUE DU JURY</div><div class="hdr-meta">SMART AGV TWIN · Imad Abail · v1.0.0</div></div>
+    <div style="display:flex;gap:1.5mm;"><span class="badge b-green">Script Oral Validé</span><span class="badge b-ink">6 Réponses Clés</span></div>
+  </div>
+
+  <div class="cols-2" style="flex:1;min-height:0;">
+    <!-- LEFT: Script Oral Mot-à-Mot -->
+    <div style="display:flex;flex-direction:column;gap:2mm;">
+      <div class="t-block">Script Oral Mot-à-Mot (Cues Démo ➔ Ce qu'il faut dire)</div>
+
+      <div class="script-box cue-green">
+        <div class="cue-tag cue-action">▶ Action 1 : Lancement de la Mission Complète (B09)</div>
+        <div class="speech-text">
+          "Je déclenche ici le cycle industriel complet via le superviseur FSM. Observez la fluidité à 60 images par seconde : le planificateur A* calcule instantanément le trajet optimal de la station de charge vers la zone de stockage A en 0.10 milliseconde. L'AGV récupère la palette, pivote avec une interpolation d'angle naturelle et fait route vers la production en Zone B."
+        </div>
+      </div>
+
+      <div class="script-box cue-orange">
+        <div class="cue-tag" style="color:var(--orange);">⚠️ Action 2 : Injection de l'Aléa en Direct (B07 "Bloquer le Couloir")</div>
+        <div class="speech-text">
+          "Simulons maintenant un imprévu majeur d'atelier : une palette bascule au milieu du couloir principal. Immédiatement, le capteur LiDAR virtuel détecte l'obstacle à 1.40 mètre. Conformément à la norme ISO 3691-4, le robot déclenche un arrêt d'urgence réflexe et son gyrophare vire au rouge d'alerte."
+        </div>
+      </div>
+
+      <div class="script-box cue-green">
+        <div class="cue-tag cue-action">🔄 Action 3 : Démonstration du Replanning A* (0.20ms)</div>
+        <div class="speech-text">
+          "Sans aucune téléportation ni intervention humaine, le système injecte l'obstacle dans la matrice d'occupation et réexécute l'algorithme A* depuis la cellule exacte où l'AGV s'est arrêté. En exactement 0.20 milliseconde et 12 extractions du tas binaire, une trajectoire de déviation de 11 cases est générée. L'AGV contourne l'obstacle et poursuit sa mission de livraison."
+        </div>
+      </div>
+
+      <div class="script-box cue-green">
+        <div class="cue-tag cue-action">🏁 Action 4 : Conclusion sur la Télémétrie (B10)</div>
+        <div class="speech-text">
+          "Le cycle s'achève avec le retour à la station d'induction D. Notre tableau de bord confirme : 52.9 mètres parcourus en 25 secondes, 0 collision, et 86.8% de batterie restante. Le système prouve la faisabilité d'un jumeau numérique léger, déterministe et immédiatement déployable."
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: FAQ Jury Blindée -->
+    <div style="display:flex;flex-direction:column;gap:1.6mm;">
+      <div class="t-block">FAQ Jury — Réponses Techniques Blindées</div>
+
+      <div class="faq-card">
+        <div class="faq-q">Q1 : Pourquoi A* plutôt que Dijkstra ou un simple BFS ?</div>
+        <div class="faq-a"><strong>Réponse :</strong> Dijkstra explore radialement dans toutes les directions sans but privilégié, ce qui entraîne le traitement inutile de centaines de nœuds. A* pondère la recherche par l'heuristique de Manhattan tie-breaking : <span class="t-code">h(n) = (|dx|+|dz|)×1.001</span>. Cela oriente la recherche directement vers la cible et réduit le nombre de nœuds explorés d'environ 15% à 20% tout en garantissant mathématiquement l'optimalité sur coût uniforme.</div>
+      </div>
+
+      <div class="faq-card">
+        <div class="faq-q">Q2 : Quelle est la complexité algorithmique de votre solution ?</div>
+        <div class="faq-a"><strong>Réponse :</strong> Grâce à notre implémentation d'un <strong>MinHeap (tas binaire)</strong> pour l'Open Set, l'extraction du minimum se fait en <strong>O(log N)</strong> au lieu de O(N). Pour notre grille de 384 cellules, la complexité temporelle est en <strong>O(E log V)</strong>, ce qui explique nos temps de calcul ultra-rapides de <strong>0.10ms</strong> en nominal et <strong>0.20ms</strong> en replanning.</div>
+      </div>
+
+      <div class="faq-card">
+        <div class="faq-q">Q3 : Comment garantissez-vous la conformité à la norme ISO 3691-4 ?</div>
+        <div class="faq-a"><strong>Réponse :</strong> L'ISO 3691-4 exige des champs de protection sans contact assurant l'arrêt avant impact. Nous modélisons un faisceau LiDAR frontal avec une distance de sécurité <span class="t-code">frontCheckDist = 1.40m</span>. Dès détection, la commande motrice est coupée instantanément dans le même cycle d'animation (zéro latence), avec basculement du gyrophare au rouge d'alerte et horodatage dans le journal d'audit.</div>
+      </div>
+
+      <div class="faq-card">
+        <div class="faq-q">Q4 : Comment passeriez-vous ce système à une flotte de 10 ou 50 AGVs ?</div>
+        <div class="faq-a"><strong>Réponse :</strong> Nous étendrions le planificateur avec l'algorithme <strong>CBS (Conflict-Based Search)</strong> ou du Space-Time A*. Chaque AGV réserve non pas seulement une case (x, y), mais une case à un instant donné (x, y, t). Si deux réservations coïncident, le superviseur impose une attente ou un contournement à l'AGV de priorité inférieure, évitant ainsi tout risque de blocage mutuel (deadlock).</div>
+      </div>
+
+      <div class="faq-card">
+        <div class="faq-q">Q5 : Peut-on connecter ce jumeau numérique à un robot réel physique ?</div>
+        <div class="faq-a"><strong>Réponse :</strong> Absolument. L'architecture a été conçue selon un découplage strict. En ajoutant un pont WebSocket via le protocole standard <strong>rosbridge v2</strong>, les waypoints calculés par notre module A* peuvent être envoyés comme messages <span class="t-code">geometry_msgs/PoseStamped</span> vers la pile de navigation <strong>ROS2 Nav2</strong> d'un véritable AGV physique.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="foot-mark">SMART AGV TWIN — Livrable 03 : Guide Démo &amp; Soutenance — Imad Abail — Novembre 2026</div>
+    <div class="foot-num">02 / 02</div>
+  </div>
+</section>
+
+<!-- NO-PRINT -->
+<div class="no-print" style="text-align:center;padding:24px 20px;background:#CBD8E0;">
+  <button onclick="window.print()" style="background:#162F3E;color:white;border:none;padding:14px 40px;border-radius:8px;font-size:14px;font-weight:800;cursor:pointer;letter-spacing:.5px;box-shadow:0 4px 15px rgba(0,0,0,.2);font-family:'Inter',sans-serif;">
+    🖨️ &nbsp; Exporter le Guide de Démonstration en PDF (A4 Paysage)
+  </button>
+  <div style="margin-top:10px;font-size:11.5px;color:#557E97;font-family:'Inter',sans-serif;">
+    SMART AGV TWIN — Livrable 03 : Guide Officiel de Démonstration (2 planches A4 Paysage) — Imad Abail
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documentation Technique — SMART AGV TWIN — Imad Abail</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+/* ══════════════════════════════════════════════════════════
+   MOTEUR D'IMPRESSION STRICT — A4 PAYSAGE 10 PAGES EXACTES
+══════════════════════════════════════════════════════════ */
+@page {
+  size: 297mm 210mm;
+  margin: 0;
+}
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html, body {
+  background: #CBD8E0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color: #162F3E;
+  margin: 0;
+  padding: 0;
+}
+.sheet {
+  width: 297mm;
+  height: 210mm;
+  max-height: 210mm;
+  min-height: 210mm;
+  padding: 6.5mm 12mm 4.5mm 12mm;
+  margin: 0 auto 10mm auto;
+  background: #FFFFFF;
+  page-break-after: always;
+  page-break-inside: avoid;
+  break-after: page;
+  break-inside: avoid;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 20px rgba(0,0,0,.12);
+  position: relative;
+}
+.sheet:last-of-type {
+  page-break-after: avoid;
+  break-after: avoid;
+}
+@media print {
+  html, body {
+    width: 297mm;
+    height: 210mm;
+    background: transparent;
+    margin: 0;
+    padding: 0;
+  }
+  .sheet {
+    margin: 0;
+    box-shadow: none;
+    width: 297mm;
+    height: 210mm;
+    max-height: 210mm;
+    page-break-after: always;
+    page-break-inside: avoid;
+    break-after: page;
+    break-inside: avoid;
+  }
+  .sheet:last-of-type {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+  .no-print { display: none !important; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   DESIGN TOKENS
+══════════════════════════════════════════════════════════ */
+:root {
+  --ink:      #162F3E;
+  --steel:    #557E97;
+  --steel2:   #3D6B85;
+  --mist:     #F8FAFC;
+  --mist2:    #EEF4F7;
+  --border:   #E2E8F0;
+  --border2:  #CBD5DC;
+  --green:    #2E7D32;
+  --green-bg: #E8F5E9;
+  --orange:   #E65100;
+  --orange-bg:#FFF3E0;
+  --red:      #C62828;
+  --red-bg:   #FFEBEE;
+  --blue:     #1565C0;
+  --blue-bg:  #E3F2FD;
+  --yellow:   #F57F17;
+  --yellow-bg:#FFFDE7;
+  --purple:   #6A1B9A;
+  --purple-bg:#F3E5F5;
+}
+
+.accent-bar {
+  height: 2.8mm;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #162F3E 0%, #557E97 50%, #2E7D32 80%, #E65100 100%);
+  flex-shrink: 0;
+  margin-bottom: 2mm;
+}
+
+.hdr {
+  background: var(--ink);
+  border-radius: 4px;
+  padding: 1.6mm 3.2mm;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  margin-bottom: 2mm;
+}
+.hdr-title { font-size: 7.2pt; font-weight: 700; color: #FFF; }
+.hdr-meta  { font-size: 5.8pt; color: #90A4AE; }
+
+.badge {
+  display: inline-block;
+  padding: .5mm 1.8mm;
+  border-radius: 6px;
+  font-size: 6pt;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.b-green  { background: var(--green-bg);  color: var(--green); }
+.b-orange { background: var(--orange-bg); color: var(--orange); }
+.b-blue   { background: var(--blue-bg);   color: var(--blue); }
+.b-red    { background: var(--red-bg);    color: var(--red); }
+.b-steel  { background: var(--mist2);     color: var(--steel2); }
+.b-ink    { background: var(--ink);       color: #FFF; }
+
+.card {
+  background: var(--mist);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.8mm 2.2mm;
+}
+
+.t-hero      { font-size: 23pt; font-weight: 900; color: var(--ink); line-height: 1.05; letter-spacing: -0.5px; }
+.t-block     { font-size: 7.1pt; font-weight: 700; color: var(--ink); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1.2px solid var(--steel); padding-bottom: 0.6mm; margin-bottom: 1.2mm; }
+.t-body      { font-size: 7.3pt; color: var(--ink); line-height: 1.34; }
+.t-small     { font-size: 6.6pt; color: var(--steel); line-height: 1.28; }
+.t-code      { font-family: 'JetBrains Mono', monospace; font-size: 6.3pt; background: var(--mist2); padding: 0.2mm 1mm; border-radius: 2px; color: var(--ink); font-weight: 600; }
+
+.sec-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.2mm;
+  padding: 1mm 2.2mm;
+  border-radius: 3px;
+  font-size: 6.6pt;
+  font-weight: 700;
+  color: #FFF;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  margin-bottom: 1.2mm;
+  flex-shrink: 0;
+}
+
+table { width: 100%; border-collapse: collapse; }
+th {
+  background: var(--ink);
+  color: #FFF;
+  padding: 1.3mm 2mm;
+  font-size: 6.4pt;
+  font-weight: 600;
+  text-align: left;
+}
+td {
+  padding: 1.1mm 2mm;
+  border-bottom: 1px solid var(--border);
+  font-size: 6.8pt;
+  color: var(--ink);
+  vertical-align: top;
+  line-height: 1.26;
+}
+tr:nth-child(even) td { background: var(--mist); }
+tr:last-child td { border-bottom: none; }
+
+.metric {
+  flex: 1;
+  background: var(--mist);
+  border: 1.2px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5mm 1.8mm;
+  text-align: center;
+  flex-shrink: 0;
+}
+.metric .val { font-size: 12pt; font-weight: 900; line-height: 1.05; color: var(--ink); }
+.metric .unit{ font-size: 5.6pt; color: var(--steel); display: block; }
+.metric .lbl { font-size: 5.8pt; color: var(--steel); margin-top: 0.3mm; line-height: 1.2; }
+.metric.grn  { border-color: var(--green); }
+.metric.grn .val { color: var(--green); }
+.metric.org  { border-color: var(--orange); }
+.metric.org .val { color: var(--orange); }
+.metric.ste  { border-color: var(--steel); }
+.metric.ste .val { color: var(--steel); }
+
+.step { display: flex; align-items: flex-start; gap: 1.5mm; margin-bottom: 1.1mm; }
+.step-num {
+  width: 4.6mm; height: 4.6mm; border-radius: 50%;
+  background: var(--steel); color: #FFF;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 5.8pt; font-weight: 800; flex-shrink: 0; margin-top: .2mm;
+}
+.step-num.g { background: var(--green); }
+.step-num.o { background: var(--orange); }
+.step-body .sh { font-size: 7pt; font-weight: 700; color: var(--ink); }
+.step-body .sd { font-size: 6.5pt; color: var(--steel); line-height: 1.25; }
+
+.formula {
+  background: var(--ink);
+  color: #FFF;
+  padding: 1.3mm 2.5mm;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7.4pt;
+  font-weight: 700;
+  text-align: center;
+}
+.formula.grn { background: var(--green); }
+.formula.ste { background: var(--steel2); }
+
+.bl {
+  border-left: 2.5px solid var(--steel);
+  background: var(--mist);
+  border-radius: 0 3px 3px 0;
+  padding: 1.5mm 2mm;
+}
+.bl.grn { border-color: var(--green); }
+.bl.org { border-color: var(--orange); }
+.bl-title { font-size: 7pt; font-weight: 700; color: var(--ink); }
+
+.code-block {
+  background: var(--ink);
+  border-radius: 4px;
+  padding: 1.8mm 2.2mm;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 6pt;
+  color: #A5D6A7;
+  line-height: 1.5;
+}
+.code-block .cm { color: #546E7A; }
+.code-block .kw { color: #80DEEA; }
+.code-block .fn { color: #CE93D8; }
+.code-block .nb { color: #EF9A9A; }
+
+.cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5mm; }
+.cols-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2.2mm; }
+
+.toc-row {
+  display: flex;
+  align-items: baseline;
+  padding: 0.8mm 0;
+  border-bottom: 1px dotted var(--border);
+  font-size: 7pt;
+}
+.toc-row:last-child { border-bottom: none; }
+.toc-n { font-weight: 700; color: var(--steel); min-width: 8mm; }
+.toc-t { flex: 1; color: var(--ink); }
+.toc-p { font-weight: 700; color: var(--ink); min-width: 6mm; text-align: right; }
+
+.meta-row {
+  display: flex;
+  gap: 2mm;
+  align-items: baseline;
+  padding: 0.7mm 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 7pt;
+}
+.meta-row:last-child { border-bottom: none; }
+.meta-k { font-weight: 700; color: var(--steel); min-width: 22mm; font-size: 6.2pt; text-transform: uppercase; }
+.meta-v { color: var(--ink); flex: 1; }
+
+.deliv {
+  border-radius: 4px;
+  padding: 1.5mm 2mm;
+  border: 1px solid var(--border);
+  background: var(--mist);
+}
+.deliv .dn  { font-size: 5.8pt; font-weight: 700; text-transform: uppercase; }
+.deliv .dt  { font-size: 7pt; font-weight: 800; color: var(--ink); margin-top: .2mm; }
+.deliv .dd  { font-size: 6.2pt; color: var(--steel); margin-top: .2mm; line-height: 1.2; }
+.deliv.curr { background: var(--orange-bg); border-color: var(--orange); }
+.deliv.done { background: var(--green-bg); border-color: var(--green); }
+
+.chk { display: flex; align-items: flex-start; gap: 1.2mm; padding: 0.6mm 0; font-size: 7pt; color: var(--ink); line-height: 1.3; }
+.chk-icon { font-size: 7.2pt; flex-shrink: 0; }
+
+.state { display: flex; align-items: center; gap: 1.2mm; padding: 0.8mm 0; border-bottom: 1px solid var(--border); font-size: 7pt; }
+.state:last-child { border-bottom: none; }
+.dot { width: 4.2mm; height: 4.2mm; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 4.6pt; font-weight: 900; color: #FFF; }
+
+.footer {
+  position: absolute;
+  bottom: 2.8mm;
+  left: 12mm;
+  right: 12mm;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+.foot-mark { font-size: 5.6pt; color: var(--border2); }
+.foot-num  { font-size: 6.6pt; font-weight: 700; color: var(--steel); }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     PAGE 01 — PAGE DE GARDE & SOMMAIRE
+     (Version et Statut supprimés · Livrable 3 = Démo de démonstration)
+══════════════════════════════════════════════════════════ -->
+<section class="sheet">
+  <div class="accent-bar"></div>
+
+  <div style="display:grid;grid-template-columns:1.25fr 1fr;gap:4mm;flex:1;min-height:0;">
+    <!-- GAUCHE -->
+    <div style="display:flex;flex-direction:column;gap:2.2mm;">
+      <div>
+        <div style="font-size:6.6pt;font-weight:700;color:var(--steel);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1.2mm;">Documentation Technique — Projet Capstone Ingénierie</div>
+        <div class="t-hero">SMART<br>AGV TWIN</div>
+        <div style="font-size:10.5pt;font-weight:800;color:var(--steel);line-height:1.2;margin-top:1mm;">AGV Smart Factory Digital Twin</div>
+        <div style="font-size:7.8pt;color:var(--steel);margin-top:0.8mm;line-height:1.4;">Navigation A* · Replanification Dynamique · Jumeau Numérique 3D WebGL</div>
+        
+        <div style="display:flex;gap:1.5mm;margin:1.8mm 0;">
+          <div style="width:9mm;height:2px;background:var(--green);border-radius:1px;"></div>
+          <div style="width:5mm;height:2px;background:var(--orange);border-radius:1px;"></div>
+          <div style="width:3mm;height:2px;background:var(--steel);border-radius:1px;"></div>
+        </div>
+
+        <div class="card" style="border-left:3px solid var(--steel);border-radius:0 4px 4px 0;">
+          <div class="t-body">Ce dossier constitue la <strong>documentation technique exhaustive</strong> du projet <strong>SMART AGV TWIN</strong>. Il couvre la totalité de la chaîne d'ingénierie — des exigences formelles à la mise en service — d'un simulateur de jumeau numérique 3D d'un AGV naviguant par algorithme A* dans une usine intelligente virtuelle à 5 zones industrielles.</div>
+        </div>
+      </div>
+
+      <!-- LIVRABLES DU PROJET CAPSTONE (Conforme capture utilisateur) -->
+      <div style="background:#F0F6FA;border:1px solid #D0DCE5;border-radius:6px;padding:2.5mm 3.5mm;">
+        <div style="font-size:7.2pt;font-weight:800;color:var(--ink);letter-spacing:0.8px;margin-bottom:2mm;">LIVRABLES DU PROJET CAPSTONE :</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:2mm;">
+          <div style="background:#FFFFFF;border:1px solid #D0DCE5;border-radius:4px;padding:1.8mm 2.8mm;display:flex;align-items:center;gap:2mm;">
+            <span style="color:var(--steel);font-size:8pt;font-weight:900;line-height:1;">•</span>
+            <span style="font-size:7.2pt;font-weight:700;color:var(--ink);">Simulateur 3D WebGL</span>
+          </div>
+          <div style="background:#FFFFFF;border:1px solid #D0DCE5;border-radius:4px;padding:1.8mm 2.8mm;display:flex;align-items:center;gap:2mm;">
+            <span style="color:var(--steel);font-size:8pt;font-weight:900;line-height:1;">•</span>
+            <span style="font-size:7.2pt;font-weight:700;color:var(--ink);">Code JS / VS Code</span>
+          </div>
+          <div style="background:#FFFFFF;border:1px solid #D0DCE5;border-radius:4px;padding:1.8mm 2.8mm;display:flex;align-items:center;gap:2mm;">
+            <span style="color:var(--steel);font-size:8pt;font-weight:900;line-height:1;">•</span>
+            <span style="font-size:7.2pt;font-weight:700;color:var(--ink);">Démo de Démonstration</span>
+          </div>
+          <div style="background:#FFF9F5;border:1.5px solid var(--orange);border-radius:4px;padding:1.8mm 2.8mm;display:flex;align-items:center;gap:2mm;">
+            <span style="color:var(--orange);font-size:8pt;font-weight:900;line-height:1;">•</span>
+            <span style="font-size:7.2pt;font-weight:700;color:var(--orange);">Documentation Tech.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DROITE : Cartouche (SANS VERSION NI STATUT) + Sommaire -->
+    <div style="display:flex;flex-direction:column;gap:2.2mm;">
+      <div class="card">
+        <div style="font-size:6.3pt;font-weight:700;color:var(--steel);text-transform:uppercase;letter-spacing:1px;margin-bottom:1mm;">Cartouche Technique Officiel</div>
+        <div class="meta-row"><div class="meta-k">Auteur</div><div class="meta-v"><strong>Imad Abail</strong></div></div>
+        <div class="meta-row"><div class="meta-k">Date</div><div class="meta-v">Novembre 2026</div></div>
+        <div class="meta-row"><div class="meta-k">Domaine</div><div class="meta-v">Simulation 3D · A* · Industrie 4.0</div></div>
+        <div class="meta-row"><div class="meta-k">Moteur 3D</div><div class="meta-v">Three.js r165 / WebGL 2.0</div></div>
+        <div class="meta-row"><div class="meta-k">Environnement</div><div class="meta-v">VS Code · Chrome · JavaScript ES6+</div></div>
+        <div class="meta-row"><div class="meta-k">Grille Usine</div><div class="meta-v">24 × 16 = 384 cellules (1.5 m/cellule)</div></div>
+        <div class="meta-row"><div class="meta-k">Norme Sécurité</div><div class="meta-v">ISO 3691-4 (AGV industriels autonomes)</div></div>
+        <div class="meta-row"><div class="meta-k">Dépendances</div><div class="meta-v">Zéro NPM · Three.js CDN · 100% autonome</div></div>
+      </div>
+
+      <div class="card" style="flex:1;">
+        <div style="font-size:6.3pt;font-weight:700;color:var(--steel);text-transform:uppercase;letter-spacing:1px;margin-bottom:1mm;">Sommaire Paginé</div>
+        <div class="toc-row"><div class="toc-n">P.01</div><div class="toc-t">Page de Garde &amp; Sommaire</div><div class="toc-p">01</div></div>
+        <div class="toc-row"><div class="toc-n">P.02</div><div class="toc-t">Résumé Exécutif &amp; Glossaire Industriel</div><div class="toc-p">02</div></div>
+        <div class="toc-row"><div class="toc-n">P.03</div><div class="toc-t">Exigences Formelles &amp; Critères d'Acceptation</div><div class="toc-p">03</div></div>
+        <div class="toc-row"><div class="toc-n">P.04</div><div class="toc-t">Cartographie de l'Usine (Fig. 01) &amp; Architecture (Fig. 02)</div><div class="toc-p">04</div></div>
+        <div class="toc-row"><div class="toc-n">P.05</div><div class="toc-t">Occupancy Grid Map, Modélisation &amp; Interfaces I/O</div><div class="toc-p">05</div></div>
+        <div class="toc-row"><div class="toc-n">P.06</div><div class="toc-t">Choix Techniques &amp; Justifications Comparatives</div><div class="toc-p">06</div></div>
+        <div class="toc-row"><div class="toc-n">P.07</div><div class="toc-t">Cœur Algorithmique : A*, Replanning &amp; Énergie</div><div class="toc-p">07</div></div>
+        <div class="toc-row"><div class="toc-n">P.08</div><div class="toc-t">Protocole de Tests, Scénarios &amp; Métriques</div><div class="toc-p">08</div></div>
+        <div class="toc-row"><div class="toc-n">P.09</div><div class="toc-t">Déploiement, Guide Opérateur &amp; Interaction UI</div><div class="toc-p">09</div></div>
+        <div class="toc-row"><div class="toc-n">P.10</div><div class="toc-t">Conclusion, Perspectives &amp; Checklist Finale</div><div class="toc-p">10</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="foot-mark">SMART AGV TWIN — Documentation Technique — Imad Abail — Novembre 2026</div>
+    <div class="foot-num">01 / 10</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     PAGE 02 — RÉSUMÉ EXÉCUTIF & GLOSSAIRE
+     (Ajustement : glossaire compacté, zéro coupure FSM en bas)
+══════════════════════════════════════════════════════════ -->
+<section class="sheet">
+  <div class="hdr">
+    <div><div class="hdr-title">PAGE 02 — Résumé Exécutif &amp; Glossaire Industriel</div><div class="hdr-meta">SMART AGV TWIN · Imad Abail</div></div>
+    <div style="display:flex;gap:1.5mm;"><span class="badge b-blue">Industrie 4.0</span><span class="badge b-green">Simulation 100% Numérique</span></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:3mm;flex:1;min-height:0;">
+    <div style="display:flex;flex-direction:column;gap:1.8mm;">
+      <div>
+        <div class="t-block">Problème Industriel &amp; Périmètre Technique</div>
+        <div class="t-body" style="margin-bottom:1.2mm;">Le transport intra-logistique automatisé en environnement partagé constitue un verrou opérationnel majeur dans les usines de nouvelle génération. Les AGV doivent naviguer de manière autonome dans des espaces encombrés, dynamiques, avec des contraintes temps réel strictes et un bilan énergétique maîtrisé.</div>
+        <div class="t-body">Ce projet développe un <strong>jumeau numérique 3D complet</strong> simulant l'intégralité de ce contexte : planification par A*, replanification dynamique face aux obstructions, gestion de missions séquentielles et supervision énergétique — 100% WebGL, sans infrastructure serveur.</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2mm;">
+        <div class="bl grn"><div class="bl-title">Cinématique AGV</div><div class="t-small">Vitesse, rotation slerp, friction, accélération simulées à 60 FPS</div></div>
+        <div class="bl grn"><div class="bl-title">Capteurs LiDAR</div><div class="t-small">Portée 1.40m · Arrêt frontal ISO 3691-4 · Gyrophare rouge</div></div>
+        <div class="bl"><div class="bl-title">Aléas Dynamiques</div><div class="t-small">Palettes tombées · Couloirs bloqués · Barrières injectées</div></div>
+        <div class="bl org"><div class="bl-title">Batterie Virtuelle</div><div class="t-small">Modèle ~0.25%/m · Seuil critique 20% → Reroutage Zone D</div></div>
+      </div>
+
+      <div>
+        <div class="t-block">Architecture Modulaire — 10 LABs de Développement</div>
+        <table>
+          <thead><tr><th style="width:7mm;">LAB</th><th style="width:18mm;">Module</th><th>Fonctionnalité Clé</th><th style="width:13mm;">Statut</th></tr></thead>
+          <tbody>
+            <tr><td><strong>01</strong></td><td>Scène 3D</td><td>Three.js WebGL · Caméra orbitale · Lumières PBR (Ambient + Dir + Hémisphère)</td><td><span class="badge b-green">✓ Validé</span></td></tr>
+            <tr><td><strong>02</strong></td><td>AGV Mesh</td><td>Carrosserie graphite · Gyrophare animé · Roues jaunes · Modèle 3D procédural</td><td><span class="badge b-green">✓ Validé</span></td></tr>
+            <tr><td><strong>03</strong></td><td>Usine 3D</td><td>5 zones industrielles · 6 racks · Sol damier · Labels 3D flottants</td><td><span class="badge b-green">✓ Validé</span></td></tr>
+            <tr><td><strong>04</strong></td><td>Grille Occ.</td><td>OccupancyGrid 24×16 · 384 cellules 1.5m · Overlay visuel · Mode édition</td><td><span class="badge b-green">✓ Validé</span></td></tr>
+            <tr><td><strong>05</strong></td><td>A* Planner</td><td>MinHeap · Manhattan tie-break · findPath() statique · 0.10ms nominal</td><td><span class="badge b-green">✓ Validé</span></td></tr>
+            <tr><td><strong>06</strong></td><td>Navigation</td><td>Waypoints · Interpolation linéaire · Rotation atan2 · 60 FPS animation</td><td><span class="badge b-green">✓ Validé</span></td></tr>
+            <tr><td><strong>07</strong></td><td>LiDAR</td><td>Détection frontale 1.40m · Arrêt urgence · Signal ISO 3691-4 · Gyrophare rouge</td><td><span class="badge b-green">✓ Validé</span></td></tr>
+            <tr><td><strong>08</strong></td><td>Replanning</td><td>Recalcul A* depuis position AGV courante · Détour mesuré : 0.20–0.30ms</td><td><span class="badge b-green">✓ Validé</span></td></tr>
+            <tr><td><strong>09</strong></td><td>Missions FSM</td><td>Cycle complet A→B→C→D · 4 étapes · Supervision autonome · FSM PRÊTE</td><td><span class="badge b-green">✓ Validé</span></td></tr>
+            <tr><td><strong>10</strong></td><td>Télémétrie</td><td>Dashboard live : batterie 86.8%, odomètre 52.9m, temps 00:25, logs horodatés</td><td><span class="badge b-green">✓ Validé</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Glossaire (ajusté pour tenir parfaitement sans déborder) -->
+    <div style="display:flex;flex-direction:column;gap:1.1mm;">
+      <div class="t-block">Glossaire Technique — 9 Termes Clés</div>
+      <div class="card" style="padding:1.4mm 2mm;"><div style="font-size:7pt;font-weight:700;color:var(--ink);">AGV — Automated Guided Vehicle</div><div class="t-small">Robot mobile industriel autonome assurant le transport sans opérateur embarqué.</div></div>
+      <div class="card" style="padding:1.4mm 2mm;"><div style="font-size:7pt;font-weight:700;color:var(--ink);">Occupancy Grid (Grille d'Occupation)</div><div class="t-small">Matrice 2D : <strong>0</strong> libre, <strong>1</strong> obstacle statique, <strong>2</strong> barrière dynamique (24×16, 384 cellules).</div></div>
+      <div class="card" style="padding:1.4mm 2mm;"><div style="font-size:7pt;font-weight:700;color:var(--ink);">Algorithme A* (A-Star)</div><div class="t-small">Routage optimal via <strong>f(n)=g(n)+h(n)</strong> alliant coût réel cumulé et heuristique orientée.</div></div>
+      <div class="card" style="padding:1.4mm 2mm;"><div style="font-size:7pt;font-weight:700;color:var(--ink);">Heuristique de Manhattan</div><div class="t-small">Distance en 4 directions : <strong>h(n)=(|dx|+|dz|)×1.001</strong>. Accélère la recherche de ~15%.</div></div>
+      <div class="card" style="padding:1.4mm 2mm;"><div style="font-size:7pt;font-weight:700;color:var(--ink);">Replanning Dynamique</div><div class="t-small">Recalcul en cours de route depuis la cellule actuelle. Délai mesuré : <strong>0.20–0.30ms</strong>.</div></div>
+      <div class="card" style="padding:1.4mm 2mm;"><div style="font-size:7pt;font-weight:700;color:var(--ink);">Open Set / Closed Set</div><div class="t-small"><strong>Open Set :</strong> MinHeap en O(log N). <strong>Closed Set :</strong> Set() JavaScript en O(1).</div></div>
+      <div class="card" style="padding:1.4mm 2mm;"><div style="font-size:7pt;font-weight:700;color:var(--ink);">Waypoints</div><div class="t-small">Points 3D (x, z) extraits du chemin A* et suivis séquentiellement par l'AGV.</div></div>
+      <div class="card" style="padding:1.4mm 2mm;"><div style="font-size:7pt;font-weight:700;color:var(--ink);">Digital Twin — Jumeau Numérique</div><div class="t-small">Réplique 3D fidèle synchronisée en direct avec la cinématique, les capteurs et l'énergie.</div></div>
+      <div class="card" style="padding:1.4mm 2mm;"><div style="font-size:7pt;font-weight:700;color:var(--ink);">FSM MissionManager</div><div class="t-small">Automate d'états : <strong>IDLE → PICKUP(A) → DELIVER_B → DELIVER_C → RECHARGE(D)</strong>.</div></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="foot-mark">SMART AGV TWIN — Documentation Technique — Imad Abail — Novembre 2026</div>
+    <div class="foot-num">02 / 10</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     PAGE 03 — EXIGENCES & CRITÈRES D'ACCEPTATION
+══════════════════════════════════════════════════════════ -->
+<section class="sheet">
+  <div class="hdr">
+    <div><div class="hdr-title">PAGE 03 — Tableau des Exigences Formelles &amp; Critères d'Acceptation</div><div class="hdr-meta">SMART AGV TWIN · Imad Abail</div></div>
+    <div style="display:flex;gap:1.5mm;"><span class="badge b-blue">F: Fonctionnel</span><span class="badge b-orange">Q: Qualité</span><span class="badge b-steel">R: Réglementaire</span></div>
+  </div>
+
+  <div style="flex:1;min-height:0;display:flex;flex-direction:column;gap:2mm;">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:7mm;">ID</th>
+          <th style="width:13mm;">Type</th>
+          <th style="width:58mm;">Exigence Formelle</th>
+          <th style="width:40mm;">Critère de Vérification</th>
+          <th style="width:13mm;">Priorité</th>
+          <th style="width:13mm;">Statut</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>F-01</strong></td>
+          <td><span class="badge b-blue">Fonctionnel</span></td>
+          <td><strong>Navigation Autonome A→B :</strong> L'AGV calcule et exécute un chemin optimal entre deux stations de la grille 24×16, sans collision avec les racks ou murs.</td>
+          <td>Chemin calculé en &lt;1ms. Zéro collision sur parcours D→B (23 steps). Validé visuellement et par journal d'audit.</td>
+          <td><span class="badge b-ink">P1 Critique</span></td>
+          <td><span class="badge b-green">✓ Validé</span></td>
+        </tr>
+        <tr>
+          <td><strong>F-02</strong></td>
+          <td><span class="badge b-blue">Fonctionnel</span></td>
+          <td><strong>Replanification Temps Réel :</strong> Dès l'obturation d'un couloir actif, l'AGV stoppe, recalcule un détour depuis sa cellule actuelle et reprend sa route.</td>
+          <td>Recalcul &lt;10ms. Détour mesuré : 11 cases (16.5m) en <strong>0.20ms</strong> / 14 cases (21.0m) en <strong>0.30ms</strong>. Contournement actif validé.</td>
+          <td><span class="badge b-ink">P1 Critique</span></td>
+          <td><span class="badge b-green">✓ Validé</span></td>
+        </tr>
+        <tr>
+          <td><strong>F-03</strong></td>
+          <td><span class="badge b-blue">Fonctionnel</span></td>
+          <td><strong>Multi-Missions Séquentielles :</strong> Le MissionManager enchaîne le cycle A→B→C→D en 4 étapes : Chargement A, Acheminement B, Livraison C, Retour D.</td>
+          <td>FSM atteint l'état COMPLETE après les 4 segments. Odomètre : <strong>52.9m</strong> en <strong>00:25</strong>. Batterie finale : 86.8%.</td>
+          <td><span class="badge b-ink">P1 Critique</span></td>
+          <td><span class="badge b-green">✓ Validé</span></td>
+        </tr>
+        <tr>
+          <td><strong>F-04</strong></td>
+          <td><span class="badge b-blue">Fonctionnel</span></td>
+          <td><strong>Reroutage Recharge (Station D) :</strong> Sous seuil critique (&lt;20%) ou fin de mission, l'AGV est rerouté vers la zone de recharge par induction D (3, 3).</td>
+          <td>Déclenchement automatique de l'état RECHARGE_NEEDED → trajectoire vers D calculée → recharge simulée confirmée.</td>
+          <td><span class="badge b-ink">P2 Majeur</span></td>
+          <td><span class="badge b-green">✓ Validé</span></td>
+        </tr>
+        <tr>
+          <td><strong>F-05</strong></td>
+          <td><span class="badge b-blue">Fonctionnel</span></td>
+          <td><strong>Arrêt d'Urgence LiDAR :</strong> Obstacle détecté à &lt;1.40m devant l'AGV → arrêt instantané (même cycle d'animation), gyrophare rouge #C62828, signal ISO 3691-4.</td>
+          <td>Test palette frontale 1.2m → coupure moteur immédiate sans impact. Log <em>"ARRÊT URGENCE ISO 3691-4"</em> enregistré.</td>
+          <td><span class="badge b-ink">P1 Critique</span></td>
+          <td><span class="badge b-green">✓ Validé</span></td>
+        </tr>
+        <tr>
+          <td><strong>Q-01</strong></td>
+          <td><span class="badge b-orange">Qualité</span></td>
+          <td><strong>Fluidité 3D &amp; Zéro Collision :</strong> Moteur de rendu WebGL à 60 FPS constant. Aucune interpénétration de géométries avec les obstacles statiques ou dynamiques.</td>
+          <td>Compteur de performance stable à 60 FPS (WebGL). Taux de collision = 0% sur l'ensemble des scénarios de test.</td>
+          <td><span class="badge b-ink">P1 Critique</span></td>
+          <td><span class="badge b-green">✓ Validé</span></td>
+        </tr>
+        <tr>
+          <td><strong>Q-02</strong></td>
+          <td><span class="badge b-orange">Qualité</span></td>
+          <td><strong>Télémétrie Temps Réel :</strong> Le tableau de bord affiche en direct : batterie %, odomètre (m), temps (s), étape FSM, logs horodatés et statut déviation A*.</td>
+          <td>Dashboard mis à jour à chaque frame via callbacks : Batterie 86.8%, Odomètre 52.9m, Temps 00:25, Étape 4/4 cohérents.</td>
+          <td><span class="badge b-ink">P2 Majeur</span></td>
+          <td><span class="badge b-green">✓ Validé</span></td>
+        </tr>
+        <tr>
+          <td><strong>R-01</strong></td>
+          <td><span class="badge b-steel">Réglementaire</span></td>
+          <td><strong>Livrable Autonome VS Code :</strong> Exécution locale via protocole <span class="t-code">file://</span> sans serveur Node.js ni dépendance NPM. Three.js CDN avec cache-busting <span class="t-code">?v=8.2</span>.</td>
+          <td>Ouverture directe de <span class="t-code">index.html</span> dans Chrome/Edge v120+ → simulation prête en &lt;3s sous Windows 10.</td>
+          <td><span class="badge b-ink">P2 Majeur</span></td>
+          <td><span class="badge b-green">✓ Validé</span></td>
+        </tr>
+        <tr>
+          <td><strong>R-02</strong></td>
+          <td><span class="badge b-steel">Réglementaire</span></td>
+          <td><strong>Conformité ISO 3691-4 :</strong> Protocole de sécurité des chariots industriels autonomes : zone de protection frontale active, arrêt immédiat, gyrophare rouge.</td>
+          <td>Arrêt réflexe à 1.40m (<span class="t-code">frontCheckDist</span>). Signalisation visuelle rouge et journalisation d'audit conformes.</td>
+          <td><span class="badge b-ink">P1 Critique</span></td>
+          <td><span class="badge b-green">✓ Validé</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="display:flex;gap:2mm;flex-shrink:0;">
+      <div class="metric grn"><div class="val">9</div><div class="lbl">Exigences Totales</div></div>
+      <div class="metric grn"><div class="val">9</div><div class="lbl">Exigences Validées</div></div>
+      <div class="metric ste"><div class="val">5</div><div class="lbl">Exigences P1 Critiques</div></div>
+      <div class="metric ste"><div class="val">3</div><div class="lbl">Exigences P2 Majeures</div></div>
+      <div class="metric grn"><div class="val">100%</div><div class="lbl">Taux de Couverture</div></div>
+      <div class="metric grn"><div class="val">0</div><div class="lbl">Non Satisfaites</div></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="foot-mark">SMART AGV TWIN — Documentation Technique — Imad Abail — Novembre 2026</div>
+    <div class="foot-num">03 / 10</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     PAGE 04 — CARTOGRAPHIE DE L'USINE (FIG. 01) & ARCHITECTURE (FIG. 02) ENSEMBLE !
+     (Textes réparés sans chevauchement · Zéro débordement)
+══════════════════════════════════════════════════════════ -->
+<section class="sheet">
+  <div class="hdr">
+    <div><div class="hdr-title">PAGE 04 — Cartographie Industrielle (Fig. 01) &amp; Architecture Système (Fig. 02)</div><div class="hdr-meta">SMART AGV TWIN · Imad Abail</div></div>
+    <div><span class="badge b-steel">Vue Spatiale &amp; Flux Fonctionnel Réunis</span></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:3.5mm;flex:1;min-height:0;">
+
+    <!-- COLONNE GAUCHE : FIG. 01 — PLAN VECTORIEL DE L'USINE (TEXTES CORRIGÉS SANS OVERLAP) -->
+    <div style="display:flex;flex-direction:column;gap:1.5mm;">
+      <div class="t-block">Fig. 01 — Plan de l'Usine : 5 Zones Industrielles &amp; Racks</div>
+      
+      <svg viewBox="0 0 240 160" width="100%" style="border:1px solid var(--border);border-radius:4px;background:#F8FAFC;flex:1;">
+        <defs>
+          <pattern id="grid24x16" width="10" height="10" patternUnits="userSpaceOnUse">
+            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#E2E8F0" stroke-width="0.5"/>
+          </pattern>
+          <marker id="pathArrow" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto">
+            <path d="M0,1 L5,3 L0,5 Z" fill="#00838F"/>
+          </marker>
+        </defs>
+
+        <!-- Fond avec trame quadrillée 24x16 (1 case = 10x10) -->
+        <rect width="240" height="160" fill="#F8FAFC"/>
+        <rect width="240" height="160" fill="url(#grid24x16)"/>
+        <rect x="0.5" y="0.5" width="239" height="159" fill="none" stroke="#94A3B8" stroke-width="0.8" stroke-dasharray="3,2"/>
+
+        <!-- ZONE D — Station de Recharge (col 1..4, row 1..3.5) -->
+        <rect x="10" y="10" width="35" height="26" rx="2.5" fill="#FFEBEE" stroke="#C62828" stroke-width="1.3"/>
+        <rect x="10" y="10" width="35" height="7.5" rx="2.5" fill="#C62828"/>
+        <text x="27.5" y="15.5" font-size="4.6" font-weight="800" fill="#FFFFFF" text-anchor="middle" font-family="'Inter', sans-serif">ZONE D</text>
+        <text x="27.5" y="23.5" font-size="3.6" font-weight="600" fill="#B71C1C" text-anchor="middle" font-family="'Inter', sans-serif">Recharge</text>
+        <circle cx="35" cy="29" r="2" fill="#C62828" stroke="#FFFFFF" stroke-width="0.7"/>
+        <text x="35" y="33.5" font-size="3.2" font-weight="700" fill="#C62828" text-anchor="middle" font-family="'Inter', sans-serif">drop(3,3)</text>
+
+        <!-- ZONE A — Stockage Matières (col 7..12, row 1..3.5) -->
+        <rect x="70" y="10" width="55" height="26" rx="2.5" fill="#FFFDE7" stroke="#F57F17" stroke-width="1.3"/>
+        <rect x="70" y="10" width="55" height="7.5" rx="2.5" fill="#F57F17"/>
+        <text x="97.5" y="15.5" font-size="4.6" font-weight="800" fill="#FFFFFF" text-anchor="middle" font-family="'Inter', sans-serif">ZONE A</text>
+        <text x="97.5" y="23.5" font-size="3.6" font-weight="600" fill="#E65100" text-anchor="middle" font-family="'Inter', sans-serif">Stockage Matières</text>
+        <circle cx="105" cy="29" r="2" fill="#F57F17" stroke="#FFFFFF" stroke-width="0.7"/>
+        <text x="105" y="33.5" font-size="3.2" font-weight="700" fill="#E65100" text-anchor="middle" font-family="'Inter', sans-serif">drop(10,3)</text>
+
+        <!-- RACK R1 — Stock Haut (col 14..16, row 2..3.5) -->
+        <rect x="140" y="16" width="28" height="19" rx="2" fill="#E0A938" stroke="#B28224" stroke-width="1"/>
+        <rect x="142" y="18" width="7" height="6" rx="1" fill="#F6C862" stroke="#8D6518" stroke-width="0.5"/>
+        <rect x="150.5" y="18" width="7" height="6" rx="1" fill="#F6C862" stroke="#8D6518" stroke-width="0.5"/>
+        <rect x="159" y="18" width="7" height="6" rx="1" fill="#F6C862" stroke="#8D6518" stroke-width="0.5"/>
+        <text x="154" y="31.5" font-size="4.6" font-weight="800" fill="#FFFFFF" text-anchor="middle" font-family="'Inter', sans-serif">R1 (3×2)</text>
+
+        <!-- LÉGENDE DE L'USINE (Quadrant supérieur droit, parfaitement dégagé) -->
+        <rect x="178" y="7" width="58" height="57" rx="3.5" fill="#FFFFFF" stroke="#CBD5DC" stroke-width="0.9" opacity="0.97"/>
+        <text x="207" y="14.5" font-size="4.2" font-weight="800" fill="#162F3E" text-anchor="middle" font-family="'Inter', sans-serif" letter-spacing="0.4">LÉGENDE DE L'USINE</text>
+        <line x1="182" y1="17.5" x2="232" y2="17.5" stroke="#E2E8F0" stroke-width="0.8"/>
+        
+        <rect x="182" y="20.5" width="5.5" height="4" rx="1" fill="#FFFDE7" stroke="#F57F17" stroke-width="0.7"/>
+        <text x="190.5" y="24" font-size="3.5" font-weight="600" fill="#162F3E" font-family="'Inter', sans-serif">Zone A · Stockage</text>
+
+        <rect x="182" y="26.5" width="5.5" height="4" rx="1" fill="#E8F5E9" stroke="#2E7D32" stroke-width="0.7"/>
+        <text x="190.5" y="30" font-size="3.5" font-weight="600" fill="#162F3E" font-family="'Inter', sans-serif">Zone B · Production</text>
+
+        <rect x="182" y="32.5" width="5.5" height="4" rx="1" fill="#E3F2FD" stroke="#1565C0" stroke-width="0.7"/>
+        <text x="190.5" y="36" font-size="3.5" font-weight="600" fill="#162F3E" font-family="'Inter', sans-serif">Zone C · Expédition</text>
+
+        <rect x="182" y="38.5" width="5.5" height="4" rx="1" fill="#FFEBEE" stroke="#C62828" stroke-width="0.7"/>
+        <text x="190.5" y="42" font-size="3.5" font-weight="600" fill="#162F3E" font-family="'Inter', sans-serif">Zone D · Recharge</text>
+
+        <rect x="182" y="44.5" width="5.5" height="4" rx="1" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="0.7"/>
+        <text x="190.5" y="48" font-size="3.5" font-weight="600" fill="#162F3E" font-family="'Inter', sans-serif">Zone E · Maintenance</text>
+
+        <rect x="182" y="50.5" width="5.5" height="4" rx="1" fill="#E0A938" stroke="#B28224" stroke-width="0.7"/>
+        <text x="190.5" y="54" font-size="3.5" font-weight="600" fill="#162F3E" font-family="'Inter', sans-serif">Racks R1–R6 (48 c.)</text>
+
+        <circle cx="184.8" cy="59" r="1.8" fill="#2E7D32"/>
+        <text x="190.5" y="60.5" font-size="3.5" font-weight="600" fill="#162F3E" font-family="'Inter', sans-serif">Point Drop (Dépôt)</text>
+
+        <!-- RACKS VERTICAUX : R2, R3, R4, R5, R6 (Racks dorés fidèles au simulateur 3D) -->
+        <!-- R2 (col 2..3, row 5..8.5) -->
+        <rect x="20" y="48" width="18" height="40" rx="2" fill="#E0A938" stroke="#B28224" stroke-width="1"/>
+        <line x1="20" y1="58" x2="38" y2="58" stroke="#B28224" stroke-width="0.6"/>
+        <line x1="20" y1="68" x2="38" y2="68" stroke="#B28224" stroke-width="0.6"/>
+        <line x1="20" y1="78" x2="38" y2="78" stroke="#B28224" stroke-width="0.6"/>
+        <text x="29" y="70" font-size="5" font-weight="800" fill="#FFFFFF" text-anchor="middle" font-family="'Inter', sans-serif">R2</text>
+
+        <!-- R3 (col 5..6, row 5..8.5) -->
+        <rect x="48" y="48" width="18" height="40" rx="2" fill="#E0A938" stroke="#B28224" stroke-width="1"/>
+        <line x1="48" y1="58" x2="66" y2="58" stroke="#B28224" stroke-width="0.6"/>
+        <line x1="48" y1="68" x2="66" y2="68" stroke="#B28224" stroke-width="0.6"/>
+        <line x1="48" y1="78" x2="66" y2="78" stroke="#B28224" stroke-width="0.6"/>
+        <text x="57" y="70" font-size="5" font-weight="800" fill="#FFFFFF" text-anchor="middle" font-family="'Inter', sans-serif">R3</text>
+
+        <!-- R4 (col 9..10, row 6..9.5) -->
+        <rect x="86" y="58" width="18" height="40" rx="2" fill="#E0A938" stroke="#B28224" stroke-width="1"/>
+        <line x1="86" y1="68" x2="104" y2="68" stroke="#B28224" stroke-width="0.6"/>
+        <line x1="86" y1="78" x2="104" y2="78" stroke="#B28224" stroke-width="0.6"/>
+        <line x1="86" y1="88" x2="104" y2="88" stroke="#B28224" stroke-width="0.6"/>
+        <text x="95" y="80" font-size="5" font-weight="800" fill="#FFFFFF" text-anchor="middle" font-family="'Inter', sans-serif">R4</text>
+
+        <!-- R5 (col 12..13, row 6..9.5) -->
+        <rect x="116" y="58" width="18" height="40" rx="2" fill="#E0A938" stroke="#B28224" stroke-width="1"/>
+        <line x1="116" y1="68" x2="134" y2="68" stroke="#B28224" stroke-width="0.6"/>
+        <line x1="116" y1="78" x2="134" y2="78" stroke="#B28224" stroke-width="0.6"/>
+        <line x1="116" y1="88" x2="134" y2="88" stroke="#B28224" stroke-width="0.6"/>
+        <text x="125" y="80" font-size="5" font-weight="800" fill="#FFFFFF" text-anchor="middle" font-family="'Inter', sans-serif">R5</text>
+
+        <!-- R6 (col 15..16, row 5..9.8) -->
+        <rect x="146" y="48" width="18" height="50" rx="2" fill="#E0A938" stroke="#B28224" stroke-width="1"/>
+        <line x1="146" y1="58" x2="164" y2="58" stroke="#B28224" stroke-width="0.6"/>
+        <line x1="146" y1="68" x2="164" y2="68" stroke="#B28224" stroke-width="0.6"/>
+        <line x1="146" y1="78" x2="164" y2="78" stroke="#B28224" stroke-width="0.6"/>
+        <line x1="146" y1="88" x2="164" y2="88" stroke="#B28224" stroke-width="0.6"/>
+        <text x="155" y="75" font-size="5" font-weight="800" fill="#FFFFFF" text-anchor="middle" font-family="'Inter', sans-serif">R6</text>
+
+        <!-- ZONE B — Ligne de Production (col 18..22, row 7..11) -->
+        <rect x="178" y="70" width="58" height="46" rx="2.5" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.3"/>
+        <rect x="178" y="70" width="58" height="8" rx="2.5" fill="#2E7D32"/>
+        <text x="207" y="76" font-size="4.6" font-weight="800" fill="#FFFFFF" text-anchor="middle" font-family="'Inter', sans-serif">ZONE B</text>
+        <text x="207" y="85" font-size="3.6" font-weight="600" fill="#1B5E20" text-anchor="middle" font-family="'Inter', sans-serif">Ligne Production</text>
+        <circle cx="178" cy="94" r="2.2" fill="#2E7D32" stroke="#FFFFFF" stroke-width="0.8"/>
+        <text x="207" y="94" font-size="3.3" font-weight="700" fill="#2E7D32" text-anchor="middle" font-family="'Inter', sans-serif">drop(18,9)</text>
+        <rect x="188" y="100" width="38" height="10" rx="1.5" fill="#C8E6C9" stroke="#81C784" stroke-width="0.6"/>
+        <text x="207" y="106.5" font-size="3.2" fill="#2E7D32" text-anchor="middle" font-family="'Inter', sans-serif">Poste Usinage &amp; Dépose</text>
+
+        <!-- ZONE E — Maintenance Robotique (col 2..5, row 11..13.5) -->
+        <rect x="20" y="112" width="38" height="26" rx="2.5" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="1.3"/>
+        <rect x="20" y="112" width="38" height="7.5" rx="2.5" fill="#6A1B9A"/>
+        <text x="39" y="117.5" font-size="4.4" font-weight="800" fill="#FFFFFF" text-anchor="middle" font-family="'Inter', sans-serif">ZONE E</text>
+        <text x="39" y="125" font-size="3.5" font-weight="600" fill="#6A1B9A" text-anchor="middle" font-family="'Inter', sans-serif">Maintenance</text>
+        <circle cx="42" cy="112" r="2" fill="#6A1B9A" stroke="#FFFFFF" stroke-width="0.7"/>
+        <text x="39" y="132" font-size="3.2" font-weight="700" fill="#6A1B9A" text-anchor="middle" font-family="'Inter', sans-serif">drop(4,11)</text>
+
+        <!-- ZONE C — Quai d'Expédition (col 8..13, row 12..14.5) -->
+        <rect x="76" y="118" width="58" height="26" rx="2.5" fill="#E3F2FD" stroke="#1565C0" stroke-width="1.3"/>
+        <rect x="76" y="118" width="58" height="7.5" rx="2.5" fill="#1565C0"/>
+        <text x="105" y="123.5" font-size="4.4" font-weight="800" fill="#FFFFFF" text-anchor="middle" font-family="'Inter', sans-serif">ZONE C</text>
+        <text x="105" y="131" font-size="3.5" font-weight="600" fill="#1565C0" text-anchor="middle" font-family="'Inter', sans-serif">Quai d'Expédition</text>
+        <circle cx="105" cy="118" r="2" fill="#1565C0" stroke="#FFFFFF" stroke-width="0.7"/>
+        <text x="105" y="138" font-size="3.2" font-weight="700" fill="#1565C0" text-anchor="middle" font-family="'Inter', sans-serif">drop(10,12)</text>
+
+        <!-- TRAJECTOIRE A* (Chemin officiel dans le couloir navigable sans chevauchement) -->
+        <path d="M 35 29 L 35 42 L 72 42 L 72 29 L 105 29 L 105 42 L 140 42 L 172 42 L 172 94 L 178 94" 
+              fill="none" stroke="#00BCD4" stroke-width="1.4" stroke-dasharray="3,2" marker-end="url(#pathArrow)"/>
+
+        <!-- ROBOT AGV (Positionné proprement dans le couloir libre central, sans toucher aucun rack !) -->
+        <g transform="translate(68, 39)">
+          <rect x="0" y="0" width="10" height="7" rx="1.5" fill="#162F3E" stroke="#557E97" stroke-width="0.8"/>
+          <circle cx="1.5" cy="-0.5" r="1.1" fill="#FDD835"/>
+          <circle cx="8.5" cy="-0.5" r="1.1" fill="#FDD835"/>
+          <circle cx="1.5" cy="7.5" r="1.1" fill="#FDD835"/>
+          <circle cx="8.5" cy="7.5" r="1.1" fill="#FDD835"/>
+          <polygon points="10,1.5 15,0 15,7 10,5.5" fill="#00BCD4" opacity="0.35"/>
+          <circle cx="5" cy="3.5" r="1.3" fill="#2E7D32"/>
+          <text x="5" y="4.5" font-size="2.6" font-weight="900" fill="#FFFFFF" text-anchor="middle" font-family="'Inter', sans-serif">AGV</text>
+        </g>
+
+        <!-- Légende de bas de carte -->
+        <text x="120" y="154" font-size="3.8" fill="#557E97" text-anchor="middle" font-style="italic" font-family="'Inter', sans-serif">
+          Grille Usine 24 × 16 (384 cellules de 1.5m) · 5 Zones Logistiques · 6 Racks Fixes · Trajectoire A* Replanifiée
+        </text>
+      </svg>
+    </div>
+
+    <!-- COLONNE DROITE : FIG. 02 — ARCHITECTURE SYSTÈME -->
+    <div style="display:flex;flex-direction:column;gap:1.5mm;">
+      <div class="t-block">Fig. 02 — Architecture Fonctionnelle : 6 Sous-Systèmes</div>
+
+      <svg viewBox="0 0 260 148" width="100%" style="border:1px solid var(--border);border-radius:4px;background:#F8FAFC;flex:1;">
+        <defs>
+          <marker id="arr1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#557E97"/></marker>
+          <marker id="arr2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2E7D32"/></marker>
+          <marker id="arr3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#E65100"/></marker>
+          <marker id="arr4" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#C62828"/></marker>
+        </defs>
+
+        <!-- Rangée 1 Haut -->
+        <rect x="8" y="10" width="68" height="28" rx="3.5" fill="#162F3E"/>
+        <text x="42" y="21" font-size="6" fill="white" text-anchor="middle" font-weight="700">Interface</text>
+        <text x="42" y="29.5" font-size="5" fill="#90A4AE" text-anchor="middle">Mission UI</text>
+
+        <rect x="98" y="10" width="70" height="28" rx="3.5" fill="#162F3E"/>
+        <text x="133" y="21" font-size="6" fill="white" text-anchor="middle" font-weight="700">Superviseur</text>
+        <text x="133" y="29.5" font-size="5" fill="#90A4AE" text-anchor="middle">Mission FSM</text>
+
+        <rect x="188" y="10" width="64" height="28" rx="3.5" fill="#2E7D32"/>
+        <text x="220" y="21" font-size="6" fill="white" text-anchor="middle" font-weight="700">Planificateur A*</text>
+        <text x="220" y="29.5" font-size="5" fill="#A5D6A7" text-anchor="middle">astar.js</text>
+
+        <!-- Rangée 2 Bas -->
+        <rect x="8" y="96" width="68" height="28" rx="3.5" fill="#162F3E"/>
+        <text x="42" y="107" font-size="6" fill="white" text-anchor="middle" font-weight="700">Scène 3D</text>
+        <text x="42" y="115.5" font-size="5" fill="#90A4AE" text-anchor="middle">Three.js WebGL</text>
+
+        <rect x="98" y="96" width="70" height="28" rx="3.5" fill="#E65100"/>
+        <text x="133" y="107" font-size="6" fill="white" text-anchor="middle" font-weight="700">AGV Virtuel</text>
+        <text x="133" y="115.5" font-size="5" fill="#FFCCBC" text-anchor="middle">agv.js + LiDAR</text>
+
+        <rect x="188" y="96" width="64" height="28" rx="3.5" fill="#557E97"/>
+        <text x="220" y="107" font-size="6" fill="white" text-anchor="middle" font-weight="700">Grille d'Occ.</text>
+        <text x="220" y="115.5" font-size="5" fill="#E3EEF4" text-anchor="middle">grid.js</text>
+
+        <!-- Flèches horizontales haut -->
+        <line x1="76" y1="24" x2="96" y2="24" stroke="#557E97" stroke-width="1.3" marker-end="url(#arr1)"/>
+        <text x="86" y="20" font-size="4.2" fill="#557E97" text-anchor="middle">ordres</text>
+
+        <line x1="168" y1="24" x2="186" y2="24" stroke="#2E7D32" stroke-width="1.3" marker-end="url(#arr2)"/>
+        <text x="177" y="20" font-size="4.2" fill="#2E7D32" text-anchor="middle">déclenche</text>
+
+        <!-- Flèche verticale planificateur -> grille -->
+        <line x1="220" y1="38" x2="220" y2="94" stroke="#557E97" stroke-width="1.3" marker-end="url(#arr1)"/>
+        <text x="229" y="68" font-size="4.2" fill="#557E97">matrice</text>
+
+        <!-- Flèche grille -> AGV -->
+        <line x1="187" y1="110" x2="170" y2="110" stroke="#2E7D32" stroke-width="1.3" marker-end="url(#arr2)"/>
+        <text x="178" y="106" font-size="4.2" fill="#2E7D32" text-anchor="middle">route</text>
+
+        <!-- Flèche AGV -> Scène -->
+        <line x1="97" y1="110" x2="78" y2="110" stroke="#557E97" stroke-width="1.3" marker-end="url(#arr1)"/>
+        <text x="87" y="106" font-size="4.2" fill="#557E97" text-anchor="middle">position</text>
+
+        <!-- Flèche Scène -> UI (remontée d'événements) -->
+        <line x1="24" y1="95" x2="24" y2="40" stroke="#557E97" stroke-width="1.2" marker-end="url(#arr1)"/>
+        <text x="11" y="68" font-size="4.2" fill="#557E97" transform="rotate(-90,11,68)">événements</text>
+
+        <!-- Rétroaction AGV -> Superviseur -->
+        <line x1="124" y1="95" x2="124" y2="40" stroke="#E65100" stroke-width="1.2" marker-end="url(#arr3)" stroke-dasharray="3,2"/>
+        <text x="112" y="68" font-size="4.2" fill="#E65100" transform="rotate(-90,112,68)">progression</text>
+
+        <!-- Urgence LiDAR AGV -> Superviseur -->
+        <line x1="145" y1="95" x2="145" y2="40" stroke="#C62828" stroke-width="1.2" marker-end="url(#arr4)" stroke-dasharray="2,2"/>
+        <text x="156" y="68" font-size="4.2" fill="#C62828" transform="rotate(-90,156,68)">arrêt urgence</text>
+
+        <!-- Légende bas -->
+        <rect x="8" y="132" width="244" height="12" rx="2" fill="#EEF4F7"/>
+        <line x1="14" y1="138" x2="26" y2="138" stroke="#557E97" stroke-width="1.2" marker-end="url(#arr1)"/>
+        <text x="29" y="140" font-size="4.5" fill="#557E97">Contrôle</text>
+        <line x1="60" y1="138" x2="72" y2="138" stroke="#2E7D32" stroke-width="1.2" marker-end="url(#arr2)"/>
+        <text x="75" y="140" font-size="4.5" fill="#2E7D32">Chemin A*</text>
+        <line x1="110" y1="138" x2="122" y2="138" stroke="#E65100" stroke-width="1.2" marker-end="url(#arr3)" stroke-dasharray="3,2"/>
+        <text x="125" y="140" font-size="4.5" fill="#E65100">Rétroaction</text>
+        <line x1="170" y1="138" x2="182" y2="138" stroke="#C62828" stroke-width="1.2" marker-end="url(#arr4)" stroke-dasharray="2,2"/>
+        <text x="185" y="140" font-size="4.5" fill="#C62828">LiDAR ISO</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1.8mm;padding:1.6mm 2.8mm;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+    <div class="t-small"><strong>Lien Système :</strong> Les 5 stations industrielles de la <strong>Fig. 01</strong> constituent les cibles de navigation du superviseur FSM, qui pilote le planificateur A* sur la grille d'occupation (<strong>Fig. 02</strong>) avec contournement temps réel à 60 FPS.</div>
+    <span class="badge b-green">Architecture Validée ✓</span>
+  </div>
+
+  <div class="footer">
+    <div class="foot-mark">SMART AGV TWIN — Documentation Technique — Imad Abail — Novembre 2026</div>
+    <div class="foot-num">04 / 10</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     PAGE 05 — OCCUPANCY GRID MAP, MODÉLISATION & INTERFACES I/O
+══════════════════════════════════════════════════════════ -->
+<section class="sheet">
+  <div class="hdr">
+    <div><div class="hdr-title">PAGE 05 — Occupancy Grid Map, Modélisation Matricielle &amp; Interfaces I/O</div><div class="hdr-meta">SMART AGV TWIN · Imad Abail</div></div>
+    <div><span class="badge b-steel">384 Cellules · Origine (−18m, −12m) · Formules de Conversion</span></div>
+  </div>
+
+  <div class="cols-2" style="flex:1;min-height:0;">
+    <div style="display:flex;flex-direction:column;gap:1.8mm;">
+      <div>
+        <div class="t-block">Coordonnées Officielles des 5 Stations Industrielles</div>
+        <table style="font-size:6.8pt;">
+          <thead><tr><th>Zone</th><th>Rôle Industriel</th><th>Bornes Grille</th><th>Point Dépôt (Drop)</th></tr></thead>
+          <tbody>
+            <tr><td><strong>A</strong></td><td>Stockage matières premières</td><td>col[7→12], row[1→3]</td><td><strong>(10, 3)</strong></td></tr>
+            <tr><td><strong>B</strong></td><td>Ligne de production / usinage</td><td>col[18→22], row[7→11]</td><td><strong>(18, 9)</strong></td></tr>
+            <tr><td><strong>C</strong></td><td>Quai d'expédition produits finis</td><td>col[8→13], row[12→14]</td><td><strong>(10, 12)</strong></td></tr>
+            <tr><td><strong>D</strong></td><td>Station de recharge par induction</td><td>col[1→4], row[1→3]</td><td><strong>(3, 3)</strong></td></tr>
+            <tr><td><strong>E</strong></td><td>Atelier de maintenance robotique</td><td>col[2→5], row[11→13]</td><td><strong>(4, 11)</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <div class="t-block">Modélisation Matricielle — Valeurs d'Occupation</div>
+        <div style="display:flex;gap:1.8mm;">
+          <div class="metric grn"><div class="val" style="font-size:15pt;">0</div><div class="lbl">Cellule Libre<br>(couloir navigable)</div></div>
+          <div class="metric org"><div class="val" style="font-size:15pt;">1</div><div class="lbl">Obstacle Statique<br>(rack, mur)</div></div>
+          <div class="metric red"><div class="val" style="font-size:15pt;">2</div><div class="lbl">Barrière Dynamique<br>(couloir bloqué)</div></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="t-block">Formules de Conversion Repère Monde ↔ Repère Grille</div>
+        <div class="card" style="margin-bottom:1mm;"><div class="t-small">W=24 col · H=16 rangées · Taille cellule S=1.5m · Origine Monde : originX = <strong>−18m</strong>, originZ = <strong>−12m</strong></div></div>
+        <div class="formula" style="font-size:6.6pt;padding:1.2mm 2.2mm;margin-bottom:1mm;">gridToWorld(col, row) → x = −18 + (col + 0.5) × 1.5 | z = −12 + (row + 0.5) × 1.5</div>
+        <div class="formula ste" style="font-size:6.6pt;padding:1.2mm 2.2mm;">worldToGrid(x, z) → col = ⌊(x + 18) / 1.5⌋ | row = ⌊(z + 12) / 1.5⌋</div>
+      </div>
+
+      <div>
+        <div class="t-block">Obstacles Statiques — CONFIG.RACKS</div>
+        <table style="font-size:6.6pt;">
+          <thead><tr><th>Rack</th><th>Origine</th><th>L × P</th><th>Cellules</th><th>Rack</th><th>Origine</th><th>L × P</th><th>Cellules</th></tr></thead>
+          <tbody>
+            <tr><td><strong>R1</strong></td><td>(14, 2)</td><td>3 × 2</td><td>6 cases</td><td><strong>R4</strong></td><td>(9, 6)</td><td>2 × 4</td><td>8 cases</td></tr>
+            <tr><td><strong>R2</strong></td><td>(2, 5)</td><td>2 × 4</td><td>8 cases</td><td><strong>R5</strong></td><td>(12, 6)</td><td>2 × 4</td><td>8 cases</td></tr>
+            <tr><td><strong>R3</strong></td><td>(5, 5)</td><td>2 × 4</td><td>8 cases</td><td><strong>R6</strong></td><td>(15, 5)</td><td>2 × 5</td><td>10 cases</td></tr>
+          </tbody>
+        </table>
+        <div class="t-caption" style="margin-top:0.6mm;">Total : 48 cellules occupées par les racks. Cellules navigables libres : <strong>334 / 384</strong> (87%).</div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1.6mm;">
+      <div class="t-block">Spécification des Interfaces I/O</div>
+      <div class="card"><div style="font-size:6.8pt;font-weight:700;color:var(--green);">Interface Mission UI → Superviseur FSM</div><div class="t-small">Type : Événements DOM + Callbacks JS · Format : <span class="t-code">{ from:'A', to:'B', priority:1 }</span><br>Déclencheur : Clic bouton UI ou appel synchrone <span class="t-code">setMission()</span></div></div>
+      <div class="card"><div style="font-size:6.8pt;font-weight:700;color:var(--steel);">Superviseur FSM → Planificateur A*</div><div class="t-small">Type : Appel statique synchrone · Format : <span class="t-code">AStarPlanner.findPath(grid, start, goal)</span><br>Retour : <span class="t-code">{ success, path[], cost, nodesExplored, timeMs }</span></div></div>
+      <div class="card"><div style="font-size:6.8pt;font-weight:700;color:var(--steel);">Planificateur A* → OccupancyGrid</div><div class="t-small">Type : Lecture matrice 2D en navigation (O(1)) · Écriture replanning : <span class="t-code">setObstacle(col, row, true)</span></div></div>
+      <div class="card"><div style="font-size:6.8pt;font-weight:700;color:var(--orange);">AGV Virtuel → Scène 3D WebGL</div><div class="t-small">Type : Animation <span class="t-code">requestAnimationFrame</span> à 60 FPS · Mise à jour position/rotation mesh 3D</div></div>
+      <div class="card"><div style="font-size:6.8pt;font-weight:700;color:var(--red);">LiDAR → Superviseur (Arrêt Réflexe ISO 3691-4)</div><div class="t-small">Type : Interruption asynchrone réflexe (&lt;1.40m) → coupure moteur immédiate</div></div>
+
+      <div class="t-block" style="margin-top:0.8mm;">Fichiers Sources du Projet (Architecture Modulaire)</div>
+      <table style="font-size:6.5pt;">
+        <tbody>
+          <tr><td style="font-weight:700;width:34mm;"><span class="t-code">js/config.js</span></td><td>Constantes globales, zones, racks, vitesse, LiDAR</td></tr>
+          <tr><td style="font-weight:700;"><span class="t-code">js/factory.js</span></td><td>Construction usine 3D, sol damier, racks, éclairage PBR</td></tr>
+          <tr><td style="font-weight:700;"><span class="t-code">js/grid.js</span></td><td>OccupancyGrid 24×16, conversion de repères, setObstacle()</td></tr>
+          <tr><td style="font-weight:700;"><span class="t-code">js/astar.js</span></td><td>Algorithme A*, MinHeap binaire, heuristique Manhattan</td></tr>
+          <tr><td style="font-weight:700;"><span class="t-code">js/agv.js</span></td><td>Cinématique différentielle, LiDAR virtuel, batterie, odomètre</td></tr>
+          <tr><td style="font-weight:700;"><span class="t-code">js/mission_manager.js</span></td><td>FSM 4 étapes, cycle A→B→C→D, gestion de charge</td></tr>
+          <tr><td style="font-weight:700;"><span class="t-code">js/app.js</span></td><td>Orchestrateur principal, boucle de rendu, télémétrie UI</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="foot-mark">SMART AGV TWIN — Documentation Technique — Imad Abail — Novembre 2026</div>
+    <div class="foot-num">05 / 10</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     PAGE 06 — CHOIX TECHNIQUES & JUSTIFICATIONS
+══════════════════════════════════════════════════════════ -->
+<section class="sheet">
+  <div class="hdr">
+    <div><div class="hdr-title">PAGE 06 — Choix Techniques &amp; Justifications Comparatives</div><div class="hdr-meta">SMART AGV TWIN · Imad Abail</div></div>
+    <div><span class="badge b-green">Three.js r165 · A* Manhattan · JavaScript ES6+ Natif</span></div>
+  </div>
+
+  <div class="cols-3" style="flex:1;min-height:0;">
+    <div style="display:flex;flex-direction:column;gap:1.6mm;">
+      <div class="sec-pill" style="background:var(--ink);">01 — Moteur de Rendu 3D</div>
+      <div style="background:var(--green-bg);border:1.5px solid var(--green);border-radius:4px;padding:1.8mm;text-align:center;flex-shrink:0;">
+        <div style="font-size:11pt;font-weight:900;color:var(--green);">Three.js r165</div>
+        <div style="font-size:5.8pt;color:var(--steel);">WebGL 2.0 · Retenu ✓</div>
+      </div>
+      <div class="t-body"><strong>Justification :</strong> Bibliothèque WebGL haut niveau, zéro installation de binaires lourds, universellement supportée dans Chrome/Edge sans plugin. Abstraction complète de l'API WebGL 2.0 avec PBR, ombres, brouillard et géométries procédurales.</div>
+      <table style="font-size:6.6pt;">
+        <thead><tr><th>Alternative</th><th>Raison du Rejet</th></tr></thead>
+        <tbody>
+          <tr><td>Unity WebGL</td><td>Build &gt;50Mo, latence démarrage, dépendance lourde</td></tr>
+          <tr><td>Babylon.js</td><td>Plus lourd, courbe d'apprentissage supérieure</td></tr>
+          <tr><td>WebGL natif</td><td>Verbosité excessive, zéro abstraction</td></tr>
+          <tr><td>Canvas 2D</td><td>Pas de 3D, pas d'éclairage PBR</td></tr>
+        </tbody>
+      </table>
+      <div class="card">
+        <div class="t-small"><strong>Perf. mesurées :</strong> <strong>60 FPS</strong> constant · <strong>44</strong> objets 3D · Lumières : Ambient + Directionnel + Hémisphère.</div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1.6mm;">
+      <div class="sec-pill" style="background:var(--green);">02 — Algorithme de Routage</div>
+      <div style="background:var(--green-bg);border:1.5px solid var(--green);border-radius:4px;padding:1.8mm;text-align:center;flex-shrink:0;">
+        <div style="font-size:11pt;font-weight:900;color:var(--green);">A* (A-Star)</div>
+        <div style="font-size:5.8pt;color:var(--steel);">Optimal + Heuristique · Retenu ✓</div>
+      </div>
+      <div class="t-body"><strong>Justification :</strong> A* est optimal et complet sur grille uniforme avec heuristique admissible (Manhattan). Il converge directement vers la cible sans exploration radiale aveugle, réduisant drastiquement le nombre de nœuds explorés en contexte d'usine rectiligne.</div>
+      <table style="font-size:6.6pt;">
+        <thead><tr><th>Algo</th><th>Optimal</th><th>Heuristique</th><th>Verdict</th></tr></thead>
+        <tbody>
+          <tr><td><strong>A*</strong></td><td>✓</td><td>✓ Manhattan</td><td style="color:var(--green);font-weight:700;">Retenu</td></tr>
+          <tr><td>Dijkstra</td><td>✓</td><td>✗ Aucune</td><td style="color:var(--orange);">Trop lent</td></tr>
+          <tr><td>BFS</td><td>✗</td><td>✗</td><td style="color:var(--orange);">Non optimal</td></tr>
+          <tr><td>DFS</td><td>✗</td><td>✗</td><td style="color:var(--orange);">Hors-sujet</td></tr>
+          <tr><td>D* Lite</td><td>✓</td><td>✓</td><td style="color:var(--steel);">Sur-ingénierie</td></tr>
+        </tbody>
+      </table>
+      <div class="card">
+        <div class="t-small"><strong>Complexité :</strong> O(E log V) avec MinHeap · V ≤ 384 nœuds<br><strong>Nominal :</strong> 0.10ms · <strong>Replanning :</strong> 0.20–0.30ms</div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1.6mm;">
+      <div class="sec-pill" style="background:var(--steel);">03 — Environnement &amp; Stack</div>
+
+      <div class="card">
+        <div style="font-size:7pt;font-weight:700;color:var(--ink);">JavaScript ES6+ Moderne</div>
+        <div class="t-small">Exécution native navigateur, typage dynamique rapide pour prototypage scientifique. Classes, modules, destructuration, async/await.</div>
+      </div>
+      <div class="card">
+        <div style="font-size:7pt;font-weight:700;color:var(--ink);">VS Code + Live Server</div>
+        <div class="t-small">IDE gratuit. Extension Live Server pour hot-reload immédiat. IntelliSense JS natif. Débogueur Chrome intégré.</div>
+      </div>
+      <div class="card">
+        <div style="font-size:7pt;font-weight:700;color:var(--ink);">HTML5 + CSS3 Natif</div>
+        <div class="t-small">Panneau latéral complet sans framework lourd (React/Vue). Livrable 100% autonome exécutable via <span class="t-code">file://</span>.</div>
+      </div>
+
+      <div class="t-block" style="margin-top:0.8mm;">Dépendances Externes</div>
+      <table style="font-size:6.6pt;">
+        <tbody>
+          <tr><td><strong>Three.js r165</strong></td><td>Rendu 3D WebGL</td><td><span class="badge b-blue">CDN</span></td></tr>
+          <tr><td><strong>Inter (Font)</strong></td><td>Typographie UI</td><td><span class="badge b-blue">Google Fonts</span></td></tr>
+          <tr><td><strong>Aucune autre</strong></td><td>Zéro dépendance NPM</td><td><span class="badge b-green">Standalone ✓</span></td></tr>
+        </tbody>
+      </table>
+      <div class="card">
+        <div class="t-small"><strong>Testé sous :</strong> Chrome &amp; Edge v120+ (Win 10) · WebGL 2.0.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="foot-mark">SMART AGV TWIN — Documentation Technique — Imad Abail — Novembre 2026</div>
+    <div class="foot-num">06 / 10</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     PAGE 07 — CŒUR ALGORITHMIQUE A* & REPLANNING
+══════════════════════════════════════════════════════════ -->
+<section class="sheet">
+  <div class="hdr">
+    <div><div class="hdr-title">PAGE 07 — Cœur Algorithmique : A*, Replanning Dynamique &amp; Modèle Énergétique</div><div class="hdr-meta">SMART AGV TWIN · Imad Abail</div></div>
+    <div><span class="badge b-green">f(n)=g(n)+h(n) · MinHeap O(log N) · Replanning 0.20–0.30ms</span></div>
+  </div>
+
+  <div class="cols-2" style="flex:1;min-height:0;">
+    <div style="display:flex;flex-direction:column;gap:1.8mm;">
+      <div class="t-block">Formalisme Mathématique — Algorithme A*</div>
+      <div class="formula">f(n) = g(n) + h(n)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2mm;">
+        <div class="card" style="text-align:center;"><div style="font-size:9.5pt;font-weight:900;color:var(--ink);">f(n)</div><div class="t-small">Coût estimé total</div></div>
+        <div class="card" style="text-align:center;"><div style="font-size:9.5pt;font-weight:900;color:var(--steel);">g(n)</div><div class="t-small">Coût réel depuis départ</div></div>
+        <div class="card" style="text-align:center;"><div style="font-size:9.5pt;font-weight:900;color:var(--green);">h(n)</div><div class="t-small">Heuristique vers cible</div></div>
+      </div>
+      <div class="formula grn" style="font-size:7.2pt;">h(n) = (|dx| + |dz|) × 1.001 — Manhattan Tie-Breaking (−15% nœuds)</div>
+      <div class="t-body">Le facteur <strong>×1.001</strong> brise les égalités entre chemins de même coût f, forçant A* à privilégier le chemin le plus direct vers le but et accélérant la recherche sur grille uniforme.</div>
+
+      <div class="t-block">Structure de Données — MinHeap &amp; Closed Set</div>
+      <div class="code-block">
+        <span class="cm">// Open Set : Tas binaire min — O(log N) par pop/push</span><br>
+        <span class="kw">openSet</span> = <span class="fn">new MinHeap</span>() &nbsp;&nbsp;<span class="cm">// trié par f(n) croissant</span><br>
+        <span class="kw">closedSet</span> = <span class="fn">new Set</span>() &nbsp;&nbsp;&nbsp;<span class="cm">// lookup O(1) via clé "col,row"</span><br>
+        <span class="kw">while</span> openSet.size > <span class="nb">0</span>:<br>
+        &nbsp;&nbsp;current = openSet.<span class="fn">pop</span>()<br>
+        &nbsp;&nbsp;<span class="kw">if</span> current == goal: <span class="kw">return</span> reconstructPath()<br>
+        &nbsp;&nbsp;<span class="kw">for</span> neighbor <span class="kw">in</span> <span class="nb">4</span>-directions:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> walkable AND <span class="kw">not</span> <span class="kw">in</span> closedSet:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;g_new = g(current) + <span class="nb">1</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;h_new = manhattan(neighbor, goal) × <span class="nb">1.001</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;openSet.<span class="fn">push</span>(neighbor, g_new + h_new)
+      </div>
+
+      <div class="t-block">Modèle de Consommation Énergétique</div>
+      <div class="formula ste" style="font-size:7pt;padding:1.4mm 2.5mm;">batterie(t) = 100 − (distance_parcourue × 0.25%/m)</div>
+      <div class="t-body"><strong>Seuil critique :</strong> Batterie &lt;20% → déclenchement RECHARGE_NEEDED → reroutage Zone D.<br><strong>Mesure cycle complet A→B→C→D :</strong> Batterie = <strong>86.8%</strong>, Odomètre = <strong>52.9m</strong>, Temps = <strong>00:25</strong>.</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1.8mm;">
+      <div class="t-block">Procédure de Replanning Dynamique — 6 Étapes</div>
+      <div class="step"><div class="step-num o">1</div><div class="step-body"><div class="sh">Détection Obstacle (LiDAR)</div><div class="sd">LiDAR frontal détecte objet à distance &lt;1.40m. Cellule obstruée : {colX, rowZ}.</div></div></div>
+      <div class="step"><div class="step-num o">2</div><div class="step-body"><div class="sh">Arrêt Immédiat — ISO 3691-4</div><div class="sd"><span class="t-code">triggerEmergencyStop()</span> → AGV stoppé dans le cycle d'animation. Gyrophare rouge #C62828.</div></div></div>
+      <div class="step"><div class="step-num o">3</div><div class="step-body"><div class="sh">Injection Obstacle dans la Grille</div><div class="sd"><span class="t-code">grid.setObstacle(colX, rowZ, true)</span> → mise à jour matrice <span class="t-code">grid[row][col]=1</span>.</div></div></div>
+      <div class="step"><div class="step-num g">4</div><div class="step-body"><div class="sh">Position Courante → Cellule Départ</div><div class="sd"><span class="t-code">worldToGrid(agv.position.x, agv.position.z)</span> = point de départ du recalcul A*.</div></div></div>
+      <div class="step"><div class="step-num g">5</div><div class="step-body"><div class="sh">Recalcul A* — 0.20 à 0.30ms</div><div class="sd">AStarPlanner génère le contournement : <strong>11 cases (16.5m) en 0.20ms</strong> ou <strong>14 cases en 0.30ms</strong>.</div></div></div>
+      <div class="step"><div class="step-num g">6</div><div class="step-body"><div class="sh">Reprise Navigation</div><div class="sd"><span class="t-code">agv.setPath(newPath)</span> → animation reprend. Si fermé → affichage <em>"0 solution A*"</em>.</div></div></div>
+
+      <div class="t-block">Vérification Chiffrée — Chemin D→B</div>
+      <div style="display:flex;gap:1.8mm;">
+        <div class="metric grn"><div class="val">23</div><div class="unit">steps</div><div class="lbl">D→B Nominal<br>0.10ms</div></div>
+        <div class="metric grn"><div class="val">20</div><div class="unit">steps</div><div class="lbl">D→B Replanifié<br>0.84ms</div></div>
+        <div class="metric org"><div class="val">11</div><div class="unit">cases</div><div class="lbl">Détour 1<br>0.20ms · 16.5m</div></div>
+        <div class="metric org"><div class="val">14</div><div class="unit">cases</div><div class="lbl">Détour 2<br>0.30ms · 21.0m</div></div>
+      </div>
+
+      <div class="t-block" style="margin-top:0.8mm;">Cinématique AGV</div>
+      <div class="card">
+        <div class="t-small"><strong>Rotation :</strong> Angle calculé via <span class="t-code">Math.atan2(dz, dx)</span> avec rotation interpolée (slerp).<br><strong>Gyrophare :</strong> Rotation continue (0.05 rad/frame). Bleu en nominal, <strong>Rouge #C62828</strong> en urgence.<br><strong>Vitesse :</strong> CONFIG.AGV_SPEED paramétrable dans <span class="t-code">config.js</span>.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="foot-mark">SMART AGV TWIN — Documentation Technique — Imad Abail — Novembre 2026</div>
+    <div class="foot-num">07 / 10</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     PAGE 08 — PROTOCOLE DE TESTS, SCÉNARIOS & MÉTRIQUES
+══════════════════════════════════════════════════════════ -->
+<section class="sheet">
+  <div class="hdr">
+    <div><div class="hdr-title">PAGE 08 — Protocole de Tests, Scénarios Officiels &amp; Métriques de Validation</div><div class="hdr-meta">SMART AGV TWIN · Imad Abail</div></div>
+    <div><span class="badge b-green">3 Scénarios · Taux Succès 100% · 0 Collision</span></div>
+  </div>
+
+  <div class="cols-2" style="flex:1;min-height:0;">
+    <div style="display:flex;flex-direction:column;gap:1.8mm;">
+      <div class="t-block">Protocole d'Évaluation — 3 Scénarios Officiels Validés</div>
+
+      <div class="bl grn">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div class="bl-title" style="color:var(--green);">SCÉNARIO 01 — Cycle de Mission Complet A→B→C→D</div>
+          <span class="badge b-green">✓ Validé</span>
+        </div>
+        <div class="t-body mt-1"><strong>Contexte :</strong> AGV en position initiale Zone D (Recharge). Démarrage de la mission complète via bouton "Lancer Cycle A→B→C→D".</div>
+        <div class="t-body mt-1"><strong>4 Étapes FSM mesurées :</strong><br>
+        → <strong>Étape 1/4 :</strong> Prise du colis brut en Zone A (Stockage)<br>
+        → <strong>Étape 2/4 :</strong> Transport &amp; dépose en Zone B (Production)<br>
+        → <strong>Étape 3/4 :</strong> Transfert produit fini vers Zone C (Expédition)<br>
+        → <strong>Étape 4/4 :</strong> Retour automatique vers Zone D (Recharge induction)<br>
+        <strong>Mesures :</strong> Odomètre = <strong>52.9m</strong> · Temps = <strong>00:25</strong> · Batterie finale = <strong>86.8%</strong>.</div>
+      </div>
+
+      <div class="bl org">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div class="bl-title" style="color:var(--orange);">SCÉNARIO 02 — Obturation de Couloir + Replanning A*</div>
+          <span class="badge b-green">✓ Validé</span>
+        </div>
+        <div class="t-body mt-1"><strong>Contexte :</strong> AGV en navigation nominale. Obturation manuelle d'un couloir central (LAB 07). Arrêt immédiat par LiDAR à 1.40m (ISO 3691-4).<br>
+        <strong>Mesures de contournement :</strong><br>
+        → Détour 1 : <strong>11 cases (16.5m) en 0.20ms</strong> (12 extractions MinHeap)<br>
+        → Détour 2 : <strong>14 cases (21.0m) en 0.30ms</strong> (15 extractions MinHeap)<br>
+        <strong>Cas limite :</strong> Couloir fermé → statut rouge <em>"0 solution A*"</em>. Pas de blocage.</div>
+      </div>
+
+      <div class="bl">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div class="bl-title">SCÉNARIO 03 — Reroutage Automatique Recharge (Station D)</div>
+          <span class="badge b-green">✓ Validé</span>
+        </div>
+        <div class="t-body mt-1"><strong>Contexte :</strong> Déclenchement sous seuil critique (&lt;20%) ou fin de mission.<br>
+        <strong>Résultat :</strong> Basculement RECHARGE_NEEDED → route optimale vers drop point D (3, 3) → recharge inductive → retour à 100%.</div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1.8mm;">
+      <div class="t-block">Tableau de Bord Télémétrie — 14 Métriques Clés</div>
+      <table style="font-size:6.8pt;">
+        <thead><tr><th>Indicateur</th><th>Valeur</th><th>Unité</th><th>Statut</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Temps calcul A* nominal</strong></td><td>0.10</td><td>ms</td><td><span class="badge b-green">✓ Mesuré</span></td></tr>
+          <tr><td><strong>Replanning détour 11 cases</strong></td><td>0.20</td><td>ms</td><td><span class="badge b-green">✓ Mesuré</span></td></tr>
+          <tr><td><strong>Replanning détour 14 cases</strong></td><td>0.30</td><td>ms</td><td><span class="badge b-green">✓ Mesuré</span></td></tr>
+          <tr><td><strong>Fréquence de rendu 3D</strong></td><td>60</td><td>FPS (WebGL)</td><td><span class="badge b-green">✓ Mesuré</span></td></tr>
+          <tr><td><strong>Chemin D→B nominal</strong></td><td>23</td><td>steps</td><td><span class="badge b-green">✓ Mesuré</span></td></tr>
+          <tr><td><strong>Chemin D→B replanifié</strong></td><td>20</td><td>steps</td><td><span class="badge b-green">✓ Mesuré</span></td></tr>
+          <tr><td><strong>Taux de succès de mission</strong></td><td>100</td><td>%</td><td><span class="badge b-green">✓ Mesuré</span></td></tr>
+          <tr><td><strong>Taux de collision</strong></td><td>0</td><td>%</td><td><span class="badge b-green">✓ Mesuré</span></td></tr>
+          <tr><td><strong>Distance portée LiDAR</strong></td><td>1.40</td><td>m</td><td><span class="badge b-green">✓ Configuré</span></td></tr>
+          <tr><td><strong>Objets 3D dans la scène</strong></td><td>44</td><td>meshes</td><td><span class="badge b-green">✓ Mesuré</span></td></tr>
+          <tr><td><strong>Cellules navigables libres</strong></td><td>334 / 384</td><td>cells</td><td><span class="badge b-green">✓ Mesuré</span></td></tr>
+          <tr><td><strong>Odomètre cycle A→B→C→D</strong></td><td>52.9</td><td>m</td><td><span class="badge b-green">✓ Mesuré</span></td></tr>
+          <tr><td><strong>Temps cycle complet</strong></td><td>00:25</td><td>mm:ss</td><td><span class="badge b-green">✓ Mesuré</span></td></tr>
+          <tr><td><strong>Batterie fin de cycle</strong></td><td>86.8</td><td>%</td><td><span class="badge b-green">✓ Mesuré</span></td></tr>
+        </tbody>
+      </table>
+
+      <div class="t-block">Cas Limites Testés &amp; Résultats</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2mm;">
+        <div class="card"><div style="font-size:6.6pt;font-weight:700;color:var(--orange);">Couloir totalement fermé</div><div class="t-small">A* retourne {success:false} → "0 solution A*" affiché en rouge. AGV à l'arrêt sans boucle infinie.</div></div>
+        <div class="card"><div style="font-size:6.6pt;font-weight:700;color:var(--orange);">Obstacle sur départ</div><div class="t-small">findPath() retourne immédiatement false. Aucun calcul inutile.</div></div>
+        <div class="card"><div style="font-size:6.6pt;font-weight:700;color:var(--red);">Batterie à 0%</div><div class="t-small">Arrêt définitif du robot, alerte batterie critique rouge.</div></div>
+        <div class="card"><div style="font-size:6.6pt;font-weight:700;color:var(--steel);">Multi-obstacles simultanés</div><div class="t-small">Mise à jour cumulative de la grille, replanning global.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="foot-mark">SMART AGV TWIN — Documentation Technique — Imad Abail — Novembre 2026</div>
+    <div class="foot-num">08 / 10</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     PAGE 09 — DÉPLOIEMENT & GUIDE OPÉRATEUR
+     (Hauteur strictement contenue, zéro débordement lors de l'impression)
+══════════════════════════════════════════════════════════ -->
+<section class="sheet">
+  <div class="hdr">
+    <div><div class="hdr-title">PAGE 09 — Déploiement, Guide Opérateur &amp; Interaction Interface Utilisateur</div><div class="hdr-meta">SMART AGV TWIN · Imad Abail</div></div>
+    <div><span class="badge b-blue">VS Code · Chrome file:// · Zéro serveur · Cache-busting ?v=8.2</span></div>
+  </div>
+
+  <div class="cols-3" style="flex:1;min-height:0;">
+    <!-- Col 1: Démarrage & Structure -->
+    <div style="display:flex;flex-direction:column;gap:1.4mm;">
+      <div class="sec-pill" style="background:var(--ink);">01 — Installation &amp; Démarrage</div>
+      <div class="step"><div class="step-num">1</div><div class="step-body"><div class="sh">Prérequis système</div><div class="sd">Chrome ou Edge v120+ · VS Code (optionnel) · GPU WebGL 2.0 (toute carte intégrée).</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><div class="sh">Lancement Direct (Chrome)</div><div class="sd">Double-clic sur <span class="t-code">index.html</span> → ouverture locale en protocole <span class="t-code">file://</span> en &lt;3s.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><div class="sh">Lancement sous VS Code</div><div class="sd">Clic droit <span class="t-code">index.html</span> → "Open with Live Server" pour activer le hot-reload.</div></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><div class="sh">Actualisation &amp; Cache</div><div class="sd">Ctrl+Shift+R si nécessaire. Scripts protégés par cache-busting <span class="t-code">?v=8.2</span>.</div></div></div>
+
+      <div class="t-block" style="margin-top:0.8mm;">Arborescence du Projet</div>
+      <div class="code-block" style="font-size:5.6pt;line-height:1.6;">
+        <span class="st">agv_smart_factory/</span><br>
+        ├── <span class="kw">index.html</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Point d'entrée principal<br>
+        ├── <span class="st">js/</span><br>
+        │ ├── <span class="fn">config.js</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Constantes globales<br>
+        │ ├── <span class="fn">factory.js</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Usine 3D + zones<br>
+        │ ├── <span class="fn">grid.js</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← OccupancyGrid<br>
+        │ ├── <span class="fn">astar.js</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Algorithme A*<br>
+        │ ├── <span class="fn">path_visualizer.js</span> ← Overlay chemin<br>
+        │ ├── <span class="fn">agv.js</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← AGV + LiDAR<br>
+        │ ├── <span class="fn">dynamic_obstacles.js</span><br>
+        │ ├── <span class="fn">mission_manager.js</span> ← FSM 4 étapes<br>
+        │ └── <span class="fn">app.js</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← Orchestrateur<br>
+        ├── <span class="st">Poster_AGV_Smart_Factory.html</span><br>
+        ├── <span class="st">Guide_Demo_AGV_Twin.html</span><br>
+        └── <span class="st">Documentation_Technique.html</span>
+      </div>
+    </div>
+
+    <!-- Col 2: Contrôles UI -->
+    <div style="display:flex;flex-direction:column;gap:1.4mm;">
+      <div class="sec-pill" style="background:var(--steel);">02 — Panneau de Contrôle UI</div>
+      <table style="font-size:6.5pt;">
+        <thead><tr><th>Bloc</th><th>Contrôle</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>B01</td><td>3D Iso / Plan 2D</td><td>Basculer vue 3D ↔ dessus 2D</td></tr>
+          <tr><td>B02</td><td>Suivre / Focus AGV</td><td>Caméra orbitale centrée AGV</td></tr>
+          <tr><td>B02</td><td>Charger / Décharger</td><td>Toggle cargaison (animation colis)</td></tr>
+          <tr><td>B02</td><td>Alerte / Prêt</td><td>Forcer état d'alerte manuelle</td></tr>
+          <tr><td>B03</td><td>Calque Grille ON/OFF</td><td>Afficher/masquer grille 24×16</td></tr>
+          <tr><td>B03</td><td>Mode Obstacle</td><td>Clic cellule → bloquer/libérer</td></tr>
+          <tr><td>B04</td><td>Naviguer vers...</td><td>Choix destination → calcul A*</td></tr>
+          <tr><td>B07</td><td>Bloquer le Couloir</td><td>Inject obstacle → arrêt LiDAR</td></tr>
+          <tr><td>B07</td><td>Nettoyer</td><td>Supprimer obstacles dynamiques</td></tr>
+          <tr><td>B08</td><td>Recalculer (A*)</td><td>Forcer replanning depuis robot</td></tr>
+          <tr><td>B09</td><td>Lancer Cycle A→B→C→D</td><td>Démarrer cycle 4 étapes FSM</td></tr>
+          <tr><td>B10</td><td>Télémétrie EN DIRECT</td><td>Supervision live : batterie, distance</td></tr>
+        </tbody>
+      </table>
+
+      <div class="t-block" style="margin-top:0.6mm;">Navigation Souris / Trackpad</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1mm;">
+        <div class="card"><div style="font-size:6.6pt;font-weight:700;color:var(--steel);">Clic Gauche + Drag</div><div class="t-small">Rotation 3D caméra</div></div>
+        <div class="card"><div style="font-size:6.6pt;font-weight:700;color:var(--steel);">Clic Droit + Drag</div><div class="t-small">Panoramique caméra</div></div>
+        <div class="card"><div style="font-size:6.6pt;font-weight:700;color:var(--steel);">Molette Souris</div><div class="t-small">Zoom In / Zoom Out</div></div>
+        <div class="card"><div style="font-size:6.6pt;font-weight:700;color:var(--steel);">Clic Cellule (Obs.)</div><div class="t-small">Éditer grille en direct</div></div>
+      </div>
+    </div>
+
+    <!-- Col 3: Télémétrie & États -->
+    <div style="display:flex;flex-direction:column;gap:1.4mm;">
+      <div class="sec-pill" style="background:var(--green);">03 — Télémétrie &amp; Audit LAB 10</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1mm;">
+        <div class="metric grn"><div class="val" style="font-size:10.5pt;">86.8%</div><div class="lbl">Batterie (fin cycle)</div></div>
+        <div class="metric ste"><div class="val" style="font-size:10.5pt;">52.9m</div><div class="lbl">Odomètre Total</div></div>
+        <div class="metric ste"><div class="val" style="font-size:10.5pt;">00:25</div><div class="lbl">Temps Opération</div></div>
+        <div class="metric grn"><div class="val" style="font-size:10.5pt;">60 FPS</div><div class="lbl">Rendu WebGL</div></div>
+      </div>
+
+      <div class="t-block" style="margin-top:0.6mm;">Journal d'Audit — Logs Horodatés</div>
+      <div class="code-block" style="font-size:5.6pt;line-height:1.55;">
+        <span class="cm">[00:00.0] Système initialisé — Grille 24×16</span><br>
+        <span class="cm">[00:00.1] AGV positionné Zone D (3,3) — FSM PRÊTE</span><br>
+        <span class="kw">[00:01.2] CYCLE A→B→C→D démarré — Étape 1/4</span><br>
+        <span class="cm">[00:01.3] A* D→A: 18 steps, 0.10ms · Prise colis</span><br>
+        <span class="kw">[00:08.4] Colis chargé Zone A · Étape 2/4</span><br>
+        <span class="cm">[00:08.5] A* A→B: 21 steps, 0.09ms · Acheminement</span><br>
+        <span class="nb">[00:14.1] ⚠ OBSTACLE — ARRÊT ISO 3691-4 (1.40m)</span><br>
+        <span class="kw">[00:14.1] Replanning A*: 0.20ms → détour 11 cases</span><br>
+        <span class="kw">[00:14.2] Contournement Actif — Reprise route</span><br>
+        <span class="cm">[00:18.3] Livraison Zone B ✓ · Étape 3/4</span><br>
+        <span class="kw">[00:22.0] Dépôt Zone C ✓ · Étape 4/4 · Recharge</span><br>
+        <span class="fn">[00:25.0] ✅ CYCLE COMPLET · Odomètre: 52.9m</span>
+      </div>
+
+      <div class="t-block" style="margin-top:0.6mm;">Indicateurs d'État AGV</div>
+      <div class="state"><div class="dot" style="background:var(--green);">▶</div><div><strong>PRÊT</strong> — Système en attente de mission</div></div>
+      <div class="state"><div class="dot" style="background:var(--steel);">→</div><div><strong>NAVIGATION</strong> — En déplacement actif</div></div>
+      <div class="state"><div class="dot" style="background:var(--orange);">!</div><div><strong>ALERTE</strong> — Arrêt d'urgence LiDAR actif</div></div>
+      <div class="state"><div class="dot" style="background:var(--red);">✕</div><div><strong>BLOQUÉ</strong> — Aucun chemin (0 solution A*)</div></div>
+      <div class="state"><div class="dot" style="background:var(--yellow);">⚡</div><div><strong>RECHARGE</strong> — En charge Station D</div></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="foot-mark">SMART AGV TWIN — Documentation Technique — Imad Abail — Novembre 2026</div>
+    <div class="foot-num">09 / 10</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     PAGE 10 — CONCLUSION TECHNIQUE, PERSPECTIVES & CHECKLIST
+     (Modifications : Les 2 petits tableaux du bas sont SUPPRIMÉS ; design harmonieux pleine hauteur)
+══════════════════════════════════════════════════════════ -->
+<section class="sheet">
+  <div class="hdr">
+    <div><div class="hdr-title">PAGE 10 — Conclusion Technique, Perspectives d'Extension &amp; Checklist Finale</div><div class="hdr-meta">SMART AGV TWIN · Imad Abail</div></div>
+    <div style="display:flex;gap:1.5mm;"><span class="badge b-green">Projet Capstone ✓ Validé</span><span class="badge b-orange">Perspectives Multi-AGV &amp; ROS2</span></div>
+  </div>
+
+  <div class="cols-3" style="flex:1;min-height:0;">
+
+    <!-- COLONNE 1 : CONCLUSION TECHNIQUE & CONTRIBUTIONS (PLEINE HAUTEUR) -->
+    <div style="display:flex;flex-direction:column;gap:2mm;">
+      <div class="sec-pill" style="background:var(--ink);">Conclusion Technique</div>
+      <div class="t-body">Le projet <strong>SMART AGV TWIN</strong> démontre qu'un jumeau numérique 3D d'un AGV industriel est pleinement réalisable et performant avec une architecture WebGL légère (Three.js r165 + JavaScript ES6+ natif), sans infrastructure serveur ni dépendance NPM lourde.</div>
+
+      <div class="card" style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:2.5mm 3mm;">
+        <div>
+          <div style="font-size:7.2pt;font-weight:700;color:var(--steel);margin-bottom:2mm;">6 Contributions Majeures Validées</div>
+          <div class="chk"><div class="chk-icon" style="color:var(--green);">✓</div><div><strong>Planification A* optimale :</strong> MinHeap binaire et heuristique Manhattan tie-breaking en JavaScript pur (calcul en 0.10ms).</div></div>
+          <div class="chk"><div class="chk-icon" style="color:var(--green);">✓</div><div><strong>Replanification temps réel :</strong> Recalcul immédiat en 0.20–0.30ms dès détection d'obstacle sans téléportation du robot.</div></div>
+          <div class="chk"><div class="chk-icon" style="color:var(--green);">✓</div><div><strong>Sécurité réflexe ISO 3691-4 :</strong> Coupure moteur instantanée sur faisceau LiDAR frontal 1.40m et gyrophare rouge.</div></div>
+          <div class="chk"><div class="chk-icon" style="color:var(--green);">✓</div><div><strong>Superviseur de mission FSM :</strong> Enchaînement autonome des 4 étapes A→B→C→D avec bilan de 52.9m en 25 secondes.</div></div>
+          <div class="chk"><div class="chk-icon" style="color:var(--green);">✓</div><div><strong>Rendu WebGL 3D fluide :</strong> 60 FPS constant avec 44 objets 3D, sol damier, racks et labels flottants.</div></div>
+          <div class="chk"><div class="chk-icon" style="color:var(--green);">✓</div><div><strong>Architecture modulaire :</strong> 10 LABs indépendants, testables et maintenables sans compilation.</div></div>
+        </div>
+
+
+      </div>
+    </div>
+
+    <!-- COLONNE 2 : PERSPECTIVES D'EXTENSION -->
+    <div style="display:flex;flex-direction:column;gap:2mm;">
+      <div class="sec-pill" style="background:var(--steel);">Perspectives d'Extension</div>
+
+      <div class="bl" style="flex:1;">
+        <div class="bl-title">Ext. 1 — Flotte Multi-AGV &amp; Algorithme CBS</div>
+        <div class="t-small mt-1">Coordination de N AGVs simultanés via l'algorithme <strong>Conflict-Based Search (CBS)</strong> avec réservation spatio-temporelle de cellules (x, y, t) pour éliminer tout risque de collision ou deadlock.</div>
+      </div>
+
+      <div class="bl" style="flex:1;">
+        <div class="bl-title">Ext. 2 — Déplacements Diagonaux 8-Directions</div>
+        <div class="t-small mt-1">Génération de trajectoires lissées avec heuristique euclidienne et gestion des angles de braquage (corner-cutting prevention) pour réduire la distance parcourue de ~15%.</div>
+      </div>
+
+      <div class="bl" style="flex:1;">
+        <div class="bl-title">Ext. 3 — Interfaçage Robotique Réel ROS2</div>
+        <div class="t-small mt-1">Passerelle WebSocket bidirectionnelle via le protocole standard <strong>rosbridge v2</strong> pour transmettre les waypoints A* vers la pile de navigation <strong>ROS2 Nav2</strong> d'un AGV physique.</div>
+      </div>
+
+      <div class="bl" style="flex:1;">
+        <div class="bl-title">Ext. 4 — Modèle Énergétique Li-ion Réaliste</div>
+        <div class="t-small mt-1">Modélisation de batterie par loi de Peukert intégrant l'accélération différentielle, la masse de la charge transportée et les profils de recharge par induction.</div>
+      </div>
+
+      <div class="bl" style="flex:1;">
+        <div class="bl-title">Ext. 5 — Visualisation Immersive WebXR</div>
+        <div class="t-small mt-1">Exploitation des capacités WebXR natives de Three.js pour projeter le jumeau numérique dans un casque de réalité mixte (Meta Quest) ou sur tablette en réalité augmentée.</div>
+      </div>
+    </div>
+
+    <!-- COLONNE 3 : CHECKLIST FINALE (SANS LES 2 PETITS TABLEAUX EN BAS) -->
+    <div style="display:flex;flex-direction:column;gap:2mm;">
+      <div class="sec-pill" style="background:var(--green);">Checklist Finale — 12 Points Validés</div>
+
+      <div class="card" style="flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:2.5mm 3mm;">
+        <div>
+          <div class="chk"><div class="chk-icon" style="color:var(--green);">☑</div><div><strong>LAB 01–10 :</strong> 10 modules JS implémentés et testés</div></div>
+          <div class="chk"><div class="chk-icon" style="color:var(--green);">☑</div><div><strong>Scène 3D Usine :</strong> 5 zones, 6 racks, éclairage PBR</div></div>
+          <div class="chk"><div class="chk-icon" style="color:var(--green);">☑</div><div><strong>OccupancyGrid :</strong> Grille 24×16, overlay, édition dynamique</div></div>
+          <div class="chk"><div class="chk-icon" style="color:var(--green);">☑</div><div><strong>Algorithme A* :</strong> MinHeap binaire, 0.10ms nominal</div></div>
+          <div class="chk"><div class="chk-icon" style="color:var(--green);">☑</div><div><strong>Cinématique AGV :</strong> Waypoints, interpolation slerp</div></div>
+          <div class="chk"><div class="chk-icon" style="color:var(--green);">☑</div><div><strong>Sécurité LiDAR :</strong> Arrêt réflexe 1.40m, norme ISO 3691-4</div></div>
+          <div class="chk"><div class="chk-icon" style="color:var(--green);">☑</div><div><strong>Replanning dynamique :</strong> Recalcul A* en 0.20–0.30ms</div></div>
+          <div class="chk"><div class="chk-icon" style="color:var(--green);">☑</div><div><strong>Superviseur FSM :</strong> Cycle 4 étapes A→B→C→D</div></div>
+          <div class="chk"><div class="chk-icon" style="color:var(--green);">☑</div><div><strong>Télémétrie :</strong> Dashboard live batterie, distance, audit</div></div>
+          <div class="chk"><div class="chk-icon" style="color:var(--green);">☑</div><div><strong>Livrable 1 :</strong> Prototype Logiciel 3D WebGL (Validé)</div></div>
+          <div class="chk"><div class="chk-icon" style="color:var(--green);">☑</div><div><strong>Livrable 2 :</strong> Poster Scientifique A4 Print-Ready (Validé)</div></div>
+          <div class="chk"><div class="chk-icon" style="color:var(--green);">☑</div><div><strong>Livrable 3 :</strong> Démo de Démonstration &amp; Soutenance (Validé)</div></div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="foot-mark">SMART AGV TWIN — Documentation Technique — Imad Abail — Novembre 2026</div>
+    <div class="foot-num">10 / 10</div>
+  </div>
+</section>
+
+<!-- NO-PRINT : Bouton d'export PDF -->
+<div class="no-print" style="text-align:center;padding:24px 20px;background:#CBD8E0;">
+  <button onclick="window.print()" style="background:#162F3E;color:white;border:none;padding:14px 40px;border-radius:8px;font-size:14px;font-weight:800;cursor:pointer;letter-spacing:.5px;box-shadow:0 4px 15px rgba(0,0,0,.2);font-family:'Inter',sans-serif;">
+    🖨️ &nbsp; Exporter la Documentation Technique en PDF (Ctrl+P)
+  </button>
+  <div style="margin-top:10px;font-size:11.5px;color:#557E97;font-family:'Inter',sans-serif;">
+    Paramètres : <strong>Destination → Enregistrer au format PDF</strong> · Format : <strong>A4 Paysage</strong> · Marges : <strong>Aucune</strong> · ✅ <strong>Graphiques d'arrière-plan</strong>
+  </div>
+  <div style="margin-top:4px;font-size:11px;color:#8CAFC0;font-family:'Inter',sans-serif;">
+    SMART AGV TWIN — 10 Planches Strictes (297mm × 210mm) · Zéro Débordement · Imad Abail
+  </div>
+</div>
+
+</body>
+</html>

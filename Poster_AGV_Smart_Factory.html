@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poster Scientifique A4 Pleine Page · AGV Smart Factory Digital Twin</title>
+    <style>
+        /* ==========================================================================
+           SPÉCIFICATIONS D'IMPRESSION A4 PLEINE PAGE MAXIMISÉE (297 mm × 210 mm)
+           Zéro Débordement · Typographie Renforcée · Occupation Optimale de l'Espace
+           ========================================================================== */
+        @page {
+            size: 297mm 210mm;
+            margin: 0;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            /* Charte éditoriale officielle (Guide Page 06) */
+            --color-encre: #0F2231;       /* Texte et titres à fort contraste */
+            --color-encre-body: #1E384C;  /* Corps de texte soutenu et lisible */
+            --color-bleu: #3D647E;        /* Filets, badges, métadonnées */
+            --color-brume: #F1F5F8;       /* Cartes et fonds structurants */
+            --color-brume-dark: #D4DFE6;  /* Bordures nettes */
+            --color-vert: #1B7A32;        /* A* optimal et validation */
+            --color-vert-bg: #E8F5E9;
+            --color-orange: #C2410C;      /* Alerte obstacle et replanning */
+            --color-orange-bg: #FFF7ED;
+            --color-jaune: #B45309;       /* Énergie et batterie */
+            --color-cyan: #0284C7;        /* Stockage & flux logistique */
+            --color-white: #FFFFFF;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: #CBD5E1;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--color-encre);
+            line-height: 1.36;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Barre d'outils écran (invisible à l'impression) */
+        .toolbar {
+            background: #0B132B;
+            color: #FFFFFF;
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+        }
+        .toolbar-title {
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .toolbar-btn {
+            background: linear-gradient(135deg, #0284C7, #0369A1);
+            color: #FFFFFF;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        .toolbar-btn:hover {
+            background: linear-gradient(135deg, #0369A1, #075985);
+            transform: translateY(-1px);
+        }
+        .toolbar-hint {
+            color: #94A3B8;
+            font-size: 11.5px;
+        }
+
+        /* ==========================================================================
+           CONTENEUR FEUILLE A4 STRICTEMENT DIMENSIONNÉ (297 mm × 210 mm)
+           ========================================================================== */
+        .sheet {
+            width: 297mm;
+            height: 210mm;
+            min-height: 210mm;
+            max-height: 210mm;
+            padding: 8mm 11mm 6.5mm 11mm;
+            margin: 15px auto;
+            background: var(--color-white);
+            box-sizing: border-box;
+            overflow: hidden; /* ZÉRO DÉBORDEMENT */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 6px 30px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        @media print {
+            html, body {
+                width: 297mm !important;
+                height: 210mm !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: transparent !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .sheet {
+                width: 297mm !important;
+                height: 210mm !important;
+                min-height: 210mm !important;
+                max-height: 210mm !important;
+                margin: 0 !important;
+                padding: 8mm 11mm 6.5mm 11mm !important;
+                box-shadow: none !important;
+                page-break-after: avoid !important;
+                page-break-inside: avoid !important;
+            }
+            .toolbar { 
+                display: none !important; 
+            }
+        }
+
+        /* ==========================================================================
+           EN-TÊTE SCIENTIFIQUE ÉDITORIAL AGRANDI & IMPACTANT
+           ========================================================================== */
+        header.poster-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid var(--color-bleu);
+            padding-bottom: 6px;
+            margin-bottom: 6px;
+        }
+
+        .header-main {
+            flex: 1;
+            padding-right: 16px;
+        }
+
+        .header-tag {
+            font-size: 7.8pt;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--color-bleu);
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-tag .badge {
+            background: var(--color-brume);
+            border: 1px solid var(--color-brume-dark);
+            padding: 1.5px 6px;
+            border-radius: 3px;
+        }
+
+        h1.poster-title {
+            font-size: 20pt;
+            font-weight: 900;
+            color: var(--color-encre);
+            line-height: 1.14;
+            letter-spacing: -0.025em;
+            margin-bottom: 3.5px;
+        }
+
+        p.poster-subtitle {
+            font-size: 8.8pt;
+            color: var(--color-bleu);
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .header-meta {
+            text-align: right;
+            border-left: 1.5px solid var(--color-brume-dark);
+            padding-left: 14px;
+            width: 82mm;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .meta-line {
+            font-size: 7.8pt;
+            color: var(--color-bleu);
+            margin-bottom: 2px;
+            line-height: 1.25;
+            white-space: nowrap;
+        }
+        .meta-line strong {
+            color: var(--color-encre);
+            font-weight: 700;
+        }
+        .meta-badge {
+            display: inline-block;
+            background: var(--color-vert-bg);
+            color: var(--color-vert);
+            border: 1px solid #86EFAC;
+            font-size: 7.2pt;
+            font-weight: 800;
+            padding: 2.5px 8px;
+            border-radius: 4px;
+            margin-top: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        /* ==========================================================================
+           GRILLE PRINCIPALE EN 3 COLONNES PARFAITEMENT ÉQUILIBRÉES
+           ========================================================================== */
+        main.poster-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1.48fr 1.06fr;
+            gap: 5.5mm;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .col {
+            display: flex;
+            flex-direction: column;
+            gap: 4.2mm;
+            min-width: 0;
+        }
+
+        /* Blocs & Cartes */
+        .block {
+            background: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .block-card {
+            background: var(--color-brume);
+            border: 1px solid var(--color-brume-dark);
+            border-radius: 5px;
+            padding: 6px 8px;
+        }
+
+        .block-title {
+            font-size: 8.8pt;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--color-encre);
+            margin-bottom: 3.5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .block-title .num {
+            color: var(--color-bleu);
+            font-weight: 900;
+        }
+
+        p.text-p {
+            font-size: 8.0pt;
+            color: var(--color-encre-body);
+            line-height: 1.34;
+            text-align: justify;
+            text-justify: inter-word;
+        }
+
+        p.text-p strong {
+            color: var(--color-encre);
+            font-weight: 700;
+        }
+
+        /* Légende de figure standardisée */
+        .fig-caption {
+            font-size: 7.0pt;
+            color: var(--color-bleu);
+            font-style: italic;
+            margin-top: 3px;
+            line-height: 1.25;
+            display: flex;
+            align-items: flex-start;
+            gap: 4px;
+        }
+        .fig-caption strong {
+            font-style: normal;
+            font-weight: 800;
+            color: var(--color-encre);
+            flex-shrink: 0;
+        }
+
+        /* Boîtes d'accent et formules mathématiques */
+        .formula-box {
+            background: #FFFFFF;
+            border-left: 3px solid var(--color-bleu);
+            border: 1px solid var(--color-brume-dark);
+            border-left-width: 3.5px;
+            border-left-color: #0284C7;
+            padding: 4px 8px;
+            margin: 3.5px 0;
+            border-radius: 4px;
+            font-family: "SF Mono", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            font-size: 7.8pt;
+            color: var(--color-encre);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+        .formula-box span.math-var {
+            font-weight: 800;
+            color: #0284C7;
+        }
+
+        /* Stepper méthodologique en 3 phases */
+        .stepper {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 4px;
+            margin-top: 3px;
+        }
+        .step-item {
+            background: #FFFFFF;
+            border: 1px solid var(--color-brume-dark);
+            border-radius: 4px;
+            padding: 4.5px 5.5px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .step-badge {
+            font-size: 6.6pt;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            display: inline-block;
+            padding: 1.5px 4.5px;
+            border-radius: 3px;
+            width: fit-content;
+        }
+        .step-1 .step-badge { background: #E0F2FE; color: #0284C7; }
+        .step-2 .step-badge { background: var(--color-orange-bg); color: var(--color-orange); }
+        .step-3 .step-badge { background: #FEF3C7; color: #B45309; }
+        .step-title {
+            font-size: 7.4pt;
+            font-weight: 800;
+            color: var(--color-encre);
+        }
+        .step-desc {
+            font-size: 6.6pt;
+            color: var(--color-bleu);
+            line-height: 1.24;
+        }
+
+        /* Tableau télémétrique de synthèse pleine largeur */
+        table.metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 7.4pt;
+            margin-top: 3px;
+        }
+        table.metrics-table th {
+            background: #E2E8F0;
+            color: var(--color-encre);
+            text-align: left;
+            padding: 3px 5px;
+            font-weight: 800;
+            border-bottom: 2px solid var(--color-bleu);
+            font-size: 6.8pt;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        table.metrics-table td {
+            padding: 2.8px 5px;
+            border-bottom: 1px solid #E2E8F0;
+            color: var(--color-encre);
+            line-height: 1.25;
+        }
+        table.metrics-table tr:nth-child(even) td {
+            background: rgba(244, 247, 249, 0.75);
+        }
+        table.metrics-table .val {
+            font-weight: 800;
+            font-family: monospace;
+            text-align: right;
+            white-space: nowrap;
+            font-size: 7.6pt;
+        }
+        table.metrics-table .to-measure {
+            color: #D97706;
+            font-style: italic;
+            font-size: 7.0pt;
+        }
+
+        /* Cartouche Livrables */
+        .livrables-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px;
+            margin-top: 3px;
+        }
+        .livrable-tag {
+            background: #FFFFFF;
+            border: 1px solid var(--color-brume-dark);
+            border-radius: 3px;
+            padding: 2.5px 5px;
+            font-size: 7.0pt;
+            font-weight: 700;
+            color: var(--color-encre);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+
+        /* ==========================================================================
+           PIED DE PAGE OFFICIEL (GUIDE PAGE 03 & 08)
+           ========================================================================== */
+        footer.poster-footer {
+            border-top: 1.5px solid var(--color-bleu);
+            padding-top: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 7.2pt;
+            color: var(--color-bleu);
+        }
+        .footer-left {
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+        .footer-center {
+            font-style: italic;
+        }
+        .footer-right {
+            font-weight: 800;
+            color: var(--color-encre);
+            letter-spacing: 0.05em;
+        }
+
+        /* SVGs responsive */
+        svg {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barre d'outils écran pour contrôle et export PDF -->
+    <div class="toolbar">
+        <div class="toolbar-title">
+            <span>📄</span>
+            <strong>Poster Officiel du Projet Capstone · Format A4 Pleine Page (297 &times; 210 mm)</strong>
+        </div>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <span class="toolbar-hint">Prêt pour tirage : Marges = Aucune · Échelle = 100% · Graphiques d'arrière-plan = Activé</span>
+            <button class="toolbar-btn" onclick="window.print()">
+                <span>🖨️</span> Exporter en PDF A4
+            </button>
+        </div>
+    </div>
+
+    <!-- PLANCHE PRINCIPALE STRICTEMENT A4 PAYSAGE (MAXIMISÉE) -->
+    <div class="sheet">
+
+        <!-- ====================================================================
+             EN-TÊTE : TITRE EXPRESSIF & CARTOUCHE MÉTADONNÉES
+             ==================================================================== -->
+        <header class="poster-header">
+            <div class="header-main">
+                <div class="header-tag">
+                    <span class="badge">Industrie 4.0</span>
+                    <span class="badge">Digital Twin</span>
+                    <span>Projet de Fin d'Études · Modélisation Mécatronique &amp; Robotique Autonome</span>
+                </div>
+                <h1 class="poster-title">Quand la logistique industrielle devient autonome : Navigation A* et jumeau numérique 3D</h1>
+                <p class="poster-subtitle">Modélisation mécatronique CAO, discrétisation spatiale sur grille 24 &times; 16, contournement dynamique d'aléas en &lt; 1 ms et supervision globale FSM.</p>
+            </div>
+            <div class="header-meta">
+                <div class="meta-line">Domaine : <strong>Industrie 4.0 &middot; Simulation WebGL</strong></div>
+                <div class="meta-line">Ingénieur Projet : <strong>Imad Abail</strong></div>
+                <div class="meta-line">Supervision : <strong>Moteur A* &amp; Three.js</strong></div>
+                <div><span class="meta-badge">&check; Prototype Fonctionnel Valid&eacute;</span></div>
+            </div>
+        </header>
+
+        <!-- ====================================================================
+             CORPS DU POSTER EN 8 BLOCS SYNTHÉTIQUES (GRILLE 3 COLONNES)
+             ==================================================================== -->
+        <main class="poster-grid">
+
+            <!-- ----------------------------------------------------------------
+                 COLONNE 1 : PROBLÉMATIQUE, OBJECTIF & ENVIRONNEMENT D'USINE
+                 ---------------------------------------------------------------- -->
+            <div class="col">
+                
+                <!-- BLOC 01 : PROBLÉMATIQUE -->
+                <section class="block">
+                    <div class="block-title">
+                        <span class="num">01.</span> Problématique Industrielle
+                    </div>
+                    <p class="text-p">
+                        Les ateliers de fabrication moderne et entrepôts automatisés font face à la congestion des flux logistiques, aux ralentissements induits par des obstacles inopinés (palettes tombées, opérateurs) et aux pannes sèches d'énergie. Sans replanification réactive sans collision, tout blocage physique entraîne l'arrêt complet de la chaîne de production.
+                    </p>
+                </section>
+
+                <!-- BLOC 02 : OBJECTIF DU SYSTÈME -->
+                <section class="block">
+                    <div class="block-title">
+                        <span class="num">02.</span> Objectif &amp; Valeur Observable
+                    </div>
+                    <p class="text-p">
+                        Concevoir et déployer un <strong>Jumeau Numérique 3D interactif (WebGL/Three.js)</strong> piloté par l'algorithme heuristique <strong>A*</strong>, capable d'exécuter un cycle multi-missions complet (A &rarr; B &rarr; C &rarr; D), de détecter réflexement les aléas par champ LiDAR frontal et de recalculer en temps réel une déviation optimale.
+                    </p>
+                </section>
+
+                <!-- BLOC 03 : ENVIRONNEMENT D'USINE (FIGURE 01 GRAND FORMAT) -->
+                <section class="block block-card" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div class="block-title">
+                            <span class="num">03.</span> Cartographie &amp; 5 Zones Usine
+                        </div>
+                        
+                        <!-- Schéma Vectoriel SVG Agrandie et Ultra-Nette (Fig. 01) -->
+                        <div style="background: #FFFFFF; border: 1px solid var(--color-brume-dark); border-radius: 4px; padding: 3px;">
+                            <svg viewBox="0 0 260 134" style="background: #F8FAFC; border-radius: 3px;">
+                                <!-- Quadrillage usine 24x16 -->
+                                <defs>
+                                    <pattern id="gridPattern" width="10.8" height="8.3" patternUnits="userSpaceOnUse">
+                                        <path d="M 10.8 0 L 0 0 0 8.3" fill="none" stroke="#E2E8F0" stroke-width="0.55"/>
+                                    </pattern>
+                                </defs>
+                                <rect width="260" height="134" fill="url(#gridPattern)"/>
+
+                                <!-- Rayonnages fixes (Racks gris foncé métallisés) -->
+                                <rect x="150" y="15" width="34" height="16" fill="#334155" rx="1.5"/>
+                                <rect x="18"  y="40" width="20" height="32" fill="#334155" rx="1.5"/>
+                                <rect x="50"  y="40" width="20" height="32" fill="#334155" rx="1.5"/>
+                                <rect x="94"  y="48" width="20" height="32" fill="#334155" rx="1.5"/>
+                                <rect x="126" y="48" width="20" height="32" fill="#334155" rx="1.5"/>
+                                <rect x="160" y="40" width="20" height="40" fill="#334155" rx="1.5"/>
+
+                                <!-- Lignes d'étagères oranges intérieures -->
+                                <line x1="150" y1="23" x2="184" y2="23" stroke="#F59E0B" stroke-width="1.2"/>
+                                <line x1="28" y1="40" x2="28" y2="72" stroke="#F59E0B" stroke-width="1.2"/>
+                                <line x1="60" y1="40" x2="60" y2="72" stroke="#F59E0B" stroke-width="1.2"/>
+                                <line x1="104" y1="48" x2="104" y2="80" stroke="#F59E0B" stroke-width="1.2"/>
+                                <line x1="136" y1="48" x2="136" y2="80" stroke="#F59E0B" stroke-width="1.2"/>
+                                <line x1="170" y1="40" x2="170" y2="80" stroke="#F59E0B" stroke-width="1.2"/>
+
+                                <!-- Zone D : Recharge (Cyan) -->
+                                <rect x="8" y="8" width="40" height="22" fill="rgba(6, 182, 212, 0.18)" stroke="#06B6D4" stroke-width="1.1" rx="2.5" stroke-dasharray="2.5 1.5"/>
+                                <text x="28" y="18" font-size="5.8" font-weight="900" fill="#0891B2" text-anchor="middle">ZONE D</text>
+                                <text x="28" y="25" font-size="4.2" font-weight="bold" fill="#0891B2" text-anchor="middle">&#9889; Recharge</text>
+
+                                <!-- Zone A : Stockage (Bleu) -->
+                                <rect x="72" y="8" width="50" height="22" fill="rgba(2, 132, 199, 0.18)" stroke="#0284C7" stroke-width="1.1" rx="2.5"/>
+                                <text x="97" y="18" font-size="5.8" font-weight="900" fill="#0284C7" text-anchor="middle">ZONE A</text>
+                                <text x="97" y="25" font-size="4.2" font-weight="bold" fill="#0284C7" text-anchor="middle">&#128230; Stockage (Colis)</text>
+
+                                <!-- Zone B : Production (Vert) -->
+                                <rect x="194" y="54" width="58" height="34" fill="rgba(16, 185, 129, 0.18)" stroke="#10B981" stroke-width="1.1" rx="2.5"/>
+                                <text x="223" y="69" font-size="5.8" font-weight="900" fill="#059669" text-anchor="middle">ZONE B</text>
+                                <text x="223" y="77" font-size="4.2" font-weight="bold" fill="#059669" text-anchor="middle">&#9881;&#65039; Production CNC</text>
+
+                                <!-- Zone C : Expédition (Ambre) -->
+                                <rect x="82" y="98" width="58" height="23" fill="rgba(245, 158, 11, 0.18)" stroke="#F59E0B" stroke-width="1.1" rx="2.5"/>
+                                <text x="111" y="109" font-size="5.8" font-weight="900" fill="#D97706" text-anchor="middle">ZONE C</text>
+                                <text x="111" y="116" font-size="4.2" font-weight="bold" fill="#D97706" text-anchor="middle">&#128666; Quai Exp&eacute;dition</text>
+
+                                <!-- Zone E : Maintenance (Violet) -->
+                                <rect x="18" y="91" width="40" height="22" fill="rgba(139, 92, 246, 0.18)" stroke="#8B5CF6" stroke-width="1.1" rx="2.5" stroke-dasharray="2.5 1.5"/>
+                                <text x="38" y="101" font-size="5.8" font-weight="900" fill="#7C3AED" text-anchor="middle">ZONE E</text>
+                                <text x="38" y="108" font-size="4.2" font-weight="bold" fill="#7C3AED" text-anchor="middle">&#128295; Maintenance</text>
+
+                                <!-- Tracé Nominal A* (Vert continu épais) -->
+                                <path d="M 28 24 L 97 24 L 97 35 L 188 35 L 188 71 L 194 71" fill="none" stroke="#2E7D32" stroke-width="2.2" stroke-linecap="round"/>
+
+                                <!-- Obstacle inopiné en couloir case (13, 4) -->
+                                <rect x="138" y="30" width="11" height="11" fill="#EF4444" stroke="#991B1B" stroke-width="1" rx="1.5"/>
+                                <text x="143.5" y="38" font-size="6.5" fill="#FFFFFF" font-weight="900" text-anchor="middle">!</text>
+
+                                <!-- Déviation A* Réactive (Vert Émeraude pointillé dynamique) -->
+                                <path d="M 128 35 L 128 44 L 152 44 L 152 71 L 194 71" fill="none" stroke="#059669" stroke-width="2.0" stroke-dasharray="3.5 2" stroke-linecap="round"/>
+
+                                <!-- AGV Virtuel au point d'arrêt LiDAR -->
+                                <circle cx="128" cy="35" r="3.6" fill="#162F3E" stroke="#F59E0B" stroke-width="1.2"/>
+                                <!-- Cône LiDAR actif -->
+                                <path d="M 128 35 L 137 30 A 7 7 0 0 1 137 40 Z" fill="rgba(239, 68, 68, 0.45)" stroke="#DC2626" stroke-width="0.5"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="fig-caption">
+                        <strong>Figure 01 :</strong> Cartographie usine 2D (24 &times; 16 cellules de 1.5 m), 5 zones de travail et déviation A* réflexe.
+                    </div>
+                </section>
+            </div>
+
+            <!-- ----------------------------------------------------------------
+                 COLONNE 2 : ARCHITECTURE TECHNIQUE & ALGORITHMIQUE A*
+                 ---------------------------------------------------------------- -->
+            <div class="col">
+                
+                <!-- BLOC 04 : ARCHITECTURE DU SYSTÈME (FIGURE 02 GRAND FORMAT) -->
+                <section class="block">
+                    <div class="block-title">
+                        <span class="num">04.</span> Architecture Fonctionnelle &amp; Flux de Données
+                    </div>
+
+                    <!-- Schéma SVG Pipeline Architectural Agrandie (Zero Clipping) -->
+                    <div style="background: var(--color-brume); border: 1px solid var(--color-brume-dark); border-radius: 5px; padding: 5px 6px;">
+                        <svg viewBox="0 0 380 52">
+                            <!-- Bloc 1 : Mission UI -->
+                            <rect x="2" y="4" width="66" height="35" rx="3.5" fill="#FFFFFF" stroke="#557E97" stroke-width="1.1"/>
+                            <text x="35" y="16" font-size="5.6" font-weight="bold" fill="#162F3E" text-anchor="middle">Superviseur FSM</text>
+                            <text x="35" y="24" font-size="4.4" fill="#557E97" text-anchor="middle">Ordres A &rarr; B &rarr; C &rarr; D</text>
+                            <text x="35" y="33" font-size="4.0" font-weight="600" fill="#0284C7" text-anchor="middle">Cycle industriel</text>
+
+                            <!-- Flèche 1 -> 2 -->
+                            <path d="M 68 21.5 L 77 21.5" stroke="#557E97" stroke-width="1.2"/>
+                            <polygon points="79,21.5 75,19 75,24" fill="#557E97"/>
+
+                            <!-- Bloc 2 : Grille d'Occupation -->
+                            <rect x="80" y="4" width="68" height="35" rx="3.5" fill="#FFFFFF" stroke="#557E97" stroke-width="1.1"/>
+                            <text x="114" y="16" font-size="5.6" font-weight="bold" fill="#162F3E" text-anchor="middle">Occupancy Grid</text>
+                            <text x="114" y="24" font-size="4.4" fill="#557E97" text-anchor="middle">Matrice 24 &times; 16</text>
+                            <text x="114" y="33" font-size="4.0" font-weight="600" fill="#10B981" text-anchor="middle">384 cellules (1.5 m)</text>
+
+                            <!-- Flèche 2 -> 3 -->
+                            <path d="M 148 21.5 L 157 21.5" stroke="#557E97" stroke-width="1.2"/>
+                            <polygon points="159,21.5 155,19 155,24" fill="#557E97"/>
+
+                            <!-- Bloc 3 : Planificateur A* -->
+                            <rect x="160" y="4" width="70" height="35" rx="3.5" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.4"/>
+                            <text x="195" y="16" font-size="5.6" font-weight="bold" fill="#0284C7" text-anchor="middle">Moteur A* &middot; MinHeap</text>
+                            <text x="195" y="24" font-size="4.4" fill="#162F3E" text-anchor="middle">Heuristique Manhattan</text>
+                            <text x="195" y="33" font-size="4.0" font-weight="bold" fill="#2E7D32" text-anchor="middle">R&eacute;solution &le; 0.10 ms</text>
+
+                            <!-- Flèche 3 -> 4 -->
+                            <path d="M 230 21.5 L 239 21.5" stroke="#557E97" stroke-width="1.2"/>
+                            <polygon points="241,21.5 237,19 237,24" fill="#557E97"/>
+
+                            <!-- Bloc 4 : AGV Cinématique & LiDAR -->
+                            <rect x="242" y="4" width="70" height="35" rx="3.5" fill="#FFFFFF" stroke="#557E97" stroke-width="1.1"/>
+                            <text x="277" y="16" font-size="5.6" font-weight="bold" fill="#162F3E" text-anchor="middle">Contr&ocirc;leur AGV</text>
+                            <text x="277" y="24" font-size="4.4" fill="#E65100" text-anchor="middle">LiDAR S&eacute;curit&eacute; 1.4 m</text>
+                            <text x="277" y="33" font-size="4.0" fill="#557E97" text-anchor="middle">Mod&egrave;le CAO STEP</text>
+
+                            <!-- Flèche 4 -> 5 -->
+                            <path d="M 312 21.5 L 321 21.5" stroke="#557E97" stroke-width="1.2"/>
+                            <polygon points="323,21.5 319,19 319,24" fill="#557E97"/>
+
+                            <!-- Bloc 5 : Rendu WebGL 3D -->
+                            <rect x="324" y="4" width="54" height="35" rx="3.5" fill="#FFFFFF" stroke="#557E97" stroke-width="1.1"/>
+                            <text x="351" y="16" font-size="5.6" font-weight="bold" fill="#162F3E" text-anchor="middle">Sc&egrave;ne 3D</text>
+                            <text x="351" y="24" font-size="4.4" fill="#10B981" text-anchor="middle">Three.js PBR</text>
+                            <text x="351" y="33" font-size="4.0" font-weight="bold" fill="#557E97" text-anchor="middle">60 FPS fluide</text>
+
+                            <!-- Boucle réflexe LiDAR -> Replanning instantané -->
+                            <path d="M 277 39 L 277 47 L 195 47 L 195 39" fill="none" stroke="#E65100" stroke-width="1.2" stroke-dasharray="2.5 1.5"/>
+                            <polygon points="195,38 193,42 197,42" fill="#E65100"/>
+                            <text x="236" y="45.5" font-size="3.8" font-weight="700" fill="#E65100" text-anchor="middle">Arrêt ISO 3691-4 &amp; Replanning instantané (0.84 ms)</text>
+                        </svg>
+                    </div>
+                    <div class="fig-caption">
+                        <strong>Figure 02 :</strong> Chaîne de commande unilatérale et boucle réflexe du scanner LiDAR vers le planificateur A*.
+                    </div>
+                </section>
+
+                <!-- BLOC 05 : ALGORITHME A* & FORMALISME DU REPLANNING -->
+                <section class="block">
+                    <div class="block-title">
+                        <span class="num">05.</span> Planification A* &amp; Replanning Dynamique
+                    </div>
+                    <p class="text-p">
+                        Le calcul de trajectoire repose sur l'évaluation de la fonction de coût total pour chaque nœud candidat <em>n</em> extrait d'une file à priorité binaire <code>MinHeap</code> en <strong>O(log N)</strong> :
+                    </p>
+                    
+                    <div class="formula-box">
+                        <span><span class="math-var">f(n)</span> = <span class="math-var">g(n)</span> + <span class="math-var">h(n)</span></span>
+                        <span>&nbsp;|&nbsp;</span>
+                        <span><span class="math-var">h(n)</span> = (|x<sub>n</sub> - x<sub>but</sub>| + |z<sub>n</sub> - z<sub>but</sub>|) &times; 1.001</span>
+                    </div>
+
+                    <p class="text-p">
+                        <strong>1. Admissibilité &amp; Consistance :</strong> L'heuristique de Manhattan sans diagonales sous-estime systématiquement le coût réel résiduel (<em>h(n) &le; c(n, p) + h(p)</em>), garantissant l'optimalité globale sans réouverture de nœud fermé. Le facteur de tie-breaking 1.001 supprime les oscillations et impose des lignes droites.
+                    </p>
+                    <p class="text-p">
+                        <strong>2. Évitement Réflexe ISO 3691-4 :</strong> Lorsqu'une caisse obstrue le couloir, le scanner LiDAR virtuel (champ de sécurité 1.40 m) déclenche l'arrêt d'urgence instantané, verrouille la cellule bloquée et relance A* depuis la position courante exacte sans téléportation.
+                    </p>
+                </section>
+
+                <!-- BLOC 06 : PROTOCOLE D'ÉVALUATION OFFICIEL -->
+                <section class="block">
+                    <div class="block-title">
+                        <span class="num">06.</span> Protocole d'Évaluation en 3 Phases
+                    </div>
+                    <div class="stepper">
+                        <div class="step-item step-1">
+                            <span class="step-badge">Phase 01</span>
+                            <div class="step-title">Cycle Nominal</div>
+                            <div class="step-desc">Prise en A (Stockage), dépose en B (Production), livraison en C (Expédition). Levée du plateau et chargement automatisés.</div>
+                        </div>
+                        <div class="step-item step-2">
+                            <span class="step-badge">Phase 02</span>
+                            <div class="step-title">Aléa Couloir</div>
+                            <div class="step-desc">Apparition inopinée d'un obstacle en case (13, 4). Arrêt réflexe LiDAR, détection et recalcul de déviation en 0.84 ms.</div>
+                        </div>
+                        <div class="step-item step-3">
+                            <span class="step-badge">Phase 03</span>
+                            <div class="step-title">Énergie &amp; Dock</div>
+                            <div class="step-desc">Surveillance odométrique de la décharge batterie. Redirection automatique vers Zone D pour recharge par induction.</div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- ----------------------------------------------------------------
+                 COLONNE 3 : RÉSULTATS, TÉLÉMÉTRIE, LIMITES & LIVRABLES (PLEINE LARGEUR)
+                 ---------------------------------------------------------------- -->
+            <div class="col">
+                
+                <!-- BLOC 07 : RÉSULTATS EXPÉRIMENTAUX & TABLEAU DE BORD (PARFAITEMENT VISIBLE) -->
+                <section class="block">
+                    <div class="block-title">
+                        <span class="num">07.</span> Résultats &amp; Télémétrie Mesurée
+                    </div>
+
+                    <table class="metrics-table">
+                        <thead>
+                            <tr>
+                                <th>Paramètre Système</th>
+                                <th style="text-align: right;">Valeur Validée</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Résolution grille discrète</td>
+                                <td class="val">24 &times; 16 (384 c.)</td>
+                            </tr>
+                            <tr>
+                                <td>Temps de calcul A* nominal</td>
+                                <td class="val" style="color: var(--color-vert);">0.10 ms</td>
+                            </tr>
+                            <tr>
+                                <td>Temps de replanning détour</td>
+                                <td class="val" style="color: var(--color-orange);">0.84 ms</td>
+                            </tr>
+                            <tr>
+                                <td>Distance nominale Zone D &rarr; B</td>
+                                <td class="val">24.0 m (16 cases)</td>
+                            </tr>
+                            <tr>
+                                <td>Trajectoire après déviation</td>
+                                <td class="val">30.0 m (20 cases)</td>
+                            </tr>
+                            <tr>
+                                <td>Portée d'arrêt d'urgence LiDAR</td>
+                                <td class="val">1.40 m (&ge; d<sub>min</sub>)</td>
+                            </tr>
+                            <tr>
+                                <td>Décharge estimée par mètre</td>
+                                <td class="val to-measure">[À mesurer] ~0.25%/m</td>
+                            </tr>
+                            <tr>
+                                <td>Fluidité de rendu graphique</td>
+                                <td class="val" style="color: var(--color-vert);">60 FPS (WebGL)</td>
+                            </tr>
+                            <tr>
+                                <td>Taux de succès de franchissement</td>
+                                <td class="val" style="color: var(--color-vert);">100 % (0 choc)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- BLOC 08 : LIMITES & PERSPECTIVES -->
+                <section class="block" style="flex: 1; display: flex; flex-direction: column;">
+                    <div class="block-title">
+                        <span class="num">08.</span> Limites &amp; Perspectives
+                    </div>
+                    <p class="text-p">
+                        Le modèle actuel opère sur un AGV unique en 2D cartésienne. La perspective majeure réside dans le déploiement d'une flotte multi-AGV avec réservation spatio-temporelle de cellules (CBS / Time-Space A*) pour proscrire les verrouillages mutuels (deadlocks).
+                    </p>
+                    <p class="text-p" style="margin-top: 3.5px;">
+                        L'intégration prochaine d'un pont WebSocket permettra de coupler directement ce jumeau numérique à l'écosystème ROS2 / Nav2 pour valider les lois de commande cinématique sur robot physique réel.
+                    </p>
+                </section>
+
+            </div>
+
+        </main>
+
+        <!-- ====================================================================
+             PIED DE PAGE SCIENTIFIQUE ÉDITORIAL
+             ==================================================================== -->
+        <footer class="poster-footer">
+            <div class="footer-left">PROJET CAPSTONE INDUSTRIE 4.0 &middot; AGV SMART FACTORY TWIN</div>
+            <div class="footer-center">Conforme aux spécifications ISO 3691-4 &middot; Moteur A* Javascript pur &middot; Three.js r128</div>
+            <div class="footer-right">PLANCHE SCIENTIFIQUE 01 / 01</div>
+        </footer>
+
+    </div>
+
+</body>
+</html>
