@@ -12,7 +12,18 @@
 
 ---
 
+## 🎬 Vidéo de Démonstration 3D en Temps Réel
+
+[![Vidéo Démonstration AGV Smart Factory](demos/agv_smart_factory_preview.gif)](demos/agv_smart_factory_digital_twin_demo.mp4)
+
+* 📹 **Fichier Vidéo HD (Dépôt) :** [`demos/agv_smart_factory_digital_twin_demo.mp4`](demos/agv_smart_factory_digital_twin_demo.mp4) (H.264 1080p, 60 FPS)
+* ☁️ **Lien Vidéo Streaming (Google Drive) :** [Visionner la Démonstration Complète sur Google Drive](https://drive.google.com/file/d/1QBTXK71XloV39bOKSFlTwr2kRLdPn0ex/view?usp=drivesdk)
+
+---
+
 ## 📸 Aperçu & Interface du Jumeau Numérique
+
+### 🏭 Supervision Générale & Livrables
 
 | Vue d'Ensemble de l'Usine 3D (36m × 24m) | Algorithme A* & Replanification Dynamique |
 | :---: | :---: |
@@ -23,6 +34,18 @@
 | :---: | :---: |
 | ![Arrivée Zone B](screenshots/03_zone_b_production.png) | ![Livrables](screenshots/00_livrables_capstone.png) |
 | **Accostage millimétrique, gestion de charge utile** et mise à jour d'état FSM en temps réel. | **Suite complète de livrables :** Simulateur 3D WebGL, Documentation 10 pages, Guide de démo, Poster. |
+
+### 🔬 Cycle Complet de Navigation A* & Évitement d'Obstacle (Captures In-Situ)
+
+| Étape 1 : Calcul du Trajet Optimal Nominal | Étape 2 : Blocage Couloir & Détection LiDAR |
+| :---: | :---: |
+| ![Trajet Optimal A*](screenshots/04_astar_optimal_path_nominal.jpg) | ![Obstacle Couloir Détecté](screenshots/05_dynamic_obstacle_corridor.jpg) |
+| **Trajet direct Zone A $\to$ Zone B (14 cases, 21.0 m)** calculé en **0.2 ms** via Min-Heap. | **Injection d'un obstacle imprévu en case (13, 4)** et détection réflexe par LiDAR virtuel. |
+
+| Étape 3 : Replanification Instantanée & Détour | Étape 4 : Mission Accomplie en Zone B |
+| :---: | :---: |
+| ![Replanification Détour](screenshots/06_astar_replanning_detour.jpg) | ![Mission Accomplie](screenshots/07_mission_accomplie_contournement.jpg) |
+| **Recalcul automatique d'une trajectoire sécurisée** contournant l'allée bloquée sans arrêt prolongé. | **Accostage réussi à la station cible de production** avec validation FSM et archivage de mission. |
 
 ---
 
